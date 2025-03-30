@@ -1,0 +1,217 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <locale.h>
+#include <stdbool.h>
+
+#ifdef _WIN32
+#include <windows.h>
+#elif 
+#ifdef _UNIX
+#include <errno.h>
+#include <unistd.h>
+#endif
+#endif
+
+#include "PasswordStruct.h"
+
+#ifndef PASSWORD_FILE 
+#define PASSWORD_FILE ".Passwords.bin"
+#endif // !PASSWORD_FILE 
+
+int TryToCreateFile(const char** filename) // 0 - успех. Остальное - ошибка
+{
+#ifdef _WIN32
+	HANDLE hFile = CreateFileA
+	(
+		(LPCSTR)filename,
+		GENERIC_WRITE,
+		0,
+		NULL,
+		OPEN_ALWAYS,
+		FILE_ATTRIBUTE_NORMAL,
+		NULL
+	);
+#elif _UNIX
+	FILE* file = fopen(filename, "w");
+#endif
+
+#ifdef _WIN32
+	if (hFile == INVALID_HANDLE_VALUE)
+#elif _UNIX
+	if (!file)
+#endif
+	{
+		int last_error;
+#ifdef _WIN32	
+		last_error = GetLastError();
+#elif _UNIX
+		last_error = errno;
+#endif
+		return last_error;
+	}
+
+#ifdef _WIN32	
+	CloseHandle(hFile);
+#elif _UNIX
+	fclose(file);
+#endif
+
+	return EXIT_SUCCESS;
+}
+
+void CheckPasswordStorage()
+{
+	bool file_exists = true;
+
+#ifdef _WIN32
+	HANDLE hFile = CreateFileA
+	(
+		PASSWORD_FILE,
+		GENERIC_WRITE,
+		0,
+		NULL,
+		OPEN_EXISTING,
+		FILE_ATTRIBUTE_NORMAL,
+		NULL
+	);
+
+	if (hFile == INVALID_HANDLE_VALUE)
+	{
+		DWORD error = GetLastError();
+		switch (error)
+		{
+			printf("Ошибка при открытии файла-хранилища \"%s\"\n", PASSWORD_FILE);
+			printf("Ошибка: ");
+		case ERROR_FILE_NOT_FOUND:
+		{
+			file_exists = false;
+			printf("файл не найден\n");
+			break;
+		}
+		case ERROR_PATH_NOT_FOUND:
+		{
+			file_exists = false;
+			printf("путь не найден\n");
+			break;
+		}
+		case ERROR_ACCESS_DENIED:
+		{
+			printf("нет доступа\n");
+			break;
+		}
+		case ERROR_SHARING_VIOLATION:
+		{
+			printf("файл занят другим процессом");
+			break;
+		}
+		default:
+		{
+			printf("%d", error);
+			break;
+		}
+		}
+		switch (error)
+		{
+		case ERROR_FILE_NOT_FOUND:
+		case ERROR_PATH_NOT_FOUND:
+			break;
+		case ERROR_ACCESS_DENIED:
+		case ERROR_SHARING_VIOLATION:
+			exit(error);
+		default:
+		{
+			exit(error);
+			break;
+		}
+		}
+	}
+	CloseHandle(hFile);
+#elif _UNIX
+	FILE* file = fopen(PASSWORD_FILE, 'rb');
+	if (!file)
+	{
+		printf("Ошибка при открытии файла-хранилища \"%s\"\n", PASSWORD_FILE);
+		printf("Ошибка: ");
+		switch (errno)
+		{
+		case ENOENT:
+		{
+			printf("файл не нейден");
+			file_exists = false;
+			break;
+		}
+		case EACCES:
+		{
+			printf("нет доступа к файлу");
+			break;
+		}
+		case EBUSY:
+		{
+			printf("файл занят другим процессом");
+			break;
+		}
+		default:
+		{
+			print("%d", strerror(errno));
+			break;
+		}
+		}
+		switch (error)
+		{
+		case ENOENT:
+			break;
+		case EACCES:
+		case EBUSY:
+			exit(error);
+		default:
+		{
+			exit(error);
+			break;
+		}
+		}
+	}
+	fclose(file);
+#endif
+	if (!file_exists)
+	{
+		printf("Создание нового файла-хранилища \"%s\"\n", PASSWORD_FILE);
+		int creation_code = TryToCreateFile((const char**)PASSWORD_FILE);
+		if (creation_code)
+		{
+			printf("Ошибка создания файла \"%s\": %d", PASSWORD_FILE, creation_code);
+			exit(creation_code);
+		}
+		else
+			printf("Успешно создан файл для хранения паролей");
+	}
+}
+
+
+
+
+int main(int argc, char** argv)
+{
+	setlocale(LC_ALL, "Russian");
+
+	CheckPasswordStorage();
+
+	FILE* file=fopen(PASSWORD_FILE,"r+");
+	struct PasswordStruct password_struct;
+	strcpy(password_struct.description,"sgs2dsf");
+	strcpy(password_struct.login,"sugoma");
+	strcpy(password_struct.password,"228");
+	strcpy(password_struct.name,"sus");
+
+	WritePasswordStruct(&file,&password_struct);
+	fseek(file,0,SEEK_SET);
+
+
+	struct PasswordStruct* passwords= ReadAllPasswordStructs(&file);
+
+	free(passwords);
+	fclose(file);
+
+	system("pause");
+
+	return EXIT_SUCCESS;
+}
