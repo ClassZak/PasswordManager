@@ -26,9 +26,11 @@ int AddNewPasswordStructEmplace(struct PasswordStruct*** array, size_t* arraySiz
 	{
 		*array=malloc(sizeof(struct PasswordStruct*));
 		if (*array)
-			array[0]=newElement;
+			*array[0]=newElement;
 
-		EXIT_SUCCESS;
+		*arraySize=1;
+
+		return EXIT_SUCCESS;
 	}
 	else
 	{
@@ -45,7 +47,7 @@ int AddNewPasswordStructEmplace(struct PasswordStruct*** array, size_t* arraySiz
 			for (size_t i = 0; i != *arraySize; ++i)
 				*array[i]=old_array[i];
 
-			*array[(*arraySize)++]=newElement;
+			(*array)[(*arraySize)++]=newElement;
 
 			return EXIT_SUCCESS;
 		}
@@ -57,15 +59,15 @@ int AddNewPasswordStructEmplace(struct PasswordStruct*** array, size_t* arraySiz
 
 void ShowCommandList()
 {
-	print_with_color("Выход\t\t\t\t\t\t%d\n",					31,	COMMAND_EXIT					);
-	print_with_color("Просмотр списка комманд\t\t\t\t%d\n",		36, COMMAND_SHOW_COMMAND_LIST		);
-	print_with_color("Очистить экран\t\t\t\t\t%d\n",			36, COMMAND_CLS						);
-	print_with_color("Записать новый пароль\t\t\t\t%d\n",		32, COMMAND_ADD_NEW					);
-	print_with_color("Удалить пароль\t\t\t\t\t%d\n",			91, COMMAND_DELETE_PASSWORD			);
-	print_with_color("Удалить пароль с названием\t\t\t%d\n",	91, COMMAND_DELETE_PASSWORD_BY_NAME	);
-	print_with_color("Удалить пароль с логином\t\t\t%d\n",		91, COMMAND_DELETE_PASSWORD_BY_LOGIN);
-	print_with_color("Найти пароль\t\t\t\t\t%d\n",				96, COMMAND_FIND_PASSWORDS			);
-	print_with_color("Показать все пароли\t\t\t\t%d\n",			96, COMMAND_SHOW_ALL_PASSWORDS		);
+	print_with_color("Выход\t\t\t\t%d\n",					31,	COMMAND_EXIT					);
+	print_with_color("Просмотр списка комманд\t\t%d\n",		36, COMMAND_SHOW_COMMAND_LIST		);
+	print_with_color("Очистить экран\t\t\t%d\n",			36, COMMAND_CLS						);
+	print_with_color("Записать новый пароль\t\t%d\n",		32, COMMAND_ADD_NEW					);
+	print_with_color("Удалить пароль\t\t\t%d\n",			91, COMMAND_DELETE_PASSWORD			);
+	print_with_color("Удалить пароль с названием\t%d\n",	91, COMMAND_DELETE_PASSWORD_BY_NAME	);
+	print_with_color("Удалить пароль с логином\t%d\n",		91, COMMAND_DELETE_PASSWORD_BY_LOGIN);
+	print_with_color("Найти пароль\t\t\t%d\n",				96, COMMAND_FIND_PASSWORDS			);
+	print_with_color("Показать все пароли\t\t%d\n",			96, COMMAND_SHOW_ALL_PASSWORDS		);
 }
 
 void Dialog(FILE** file)
@@ -73,6 +75,7 @@ void Dialog(FILE** file)
 	char input[256];
 	long long_command;
 	int command;
+	long file_size=0;
 
 	ShowCommandList();
 
@@ -126,6 +129,9 @@ void Dialog(FILE** file)
 		// Приведение к int после всех проверок
 		command = (int)long_command;
 
+
+		file_size=getFileSize(file);
+
 		switch (command)
 		{
 			case COMMAND_EXIT:
@@ -150,24 +156,199 @@ void Dialog(FILE** file)
 			case COMMAND_ADD_NEW:
 			{
 				struct PasswordStruct password;
+				printf("Введите значения для нового пароля:\n");
+
+				int scan_res;
+				printf("Название пароля\t->");
+				scan_res = scanf("%s", password.name);
+				if (scan_res != 1)
+				{
+					handle_char_input_error();
+					continue;
+				}
+
+				printf("Описание пароля\t->");
+				scan_res = scanf("%s", password.description);
+				if (scan_res != 1)
+				{
+					handle_char_input_error();
+					continue;
+				}
+
+				printf("Логин\t\t->");
+				scan_res = scanf("%s", password.login);
+				if (scan_res != 1)
+				{
+					handle_char_input_error();
+					continue;
+				}
+
+				printf("Пароль\t\t->");
+				scan_res = scanf("%s", password.password);
+				if (scan_res != 1)
+				{
+					handle_char_input_error();
+					continue;
+				}
+				password.name		[sizeof(password.name		) - 1] = '\0';
+				password.description[sizeof(password.description) - 1] = '\0';
+				password.login		[sizeof(password.login		) - 1] = '\0';
+				password.password	[sizeof(password.password	) - 1] = '\0';
 				int res=AddNewPassword(file,&password);
 				if(res==EXIT_SUCCESS)
-					print_with_color("Новый пароль успешно добавлен", 92);
+					print_with_color("Новый пароль успешно добавлен\n", 92);
 				else
 				if(res==EXIT_FAILURE)
-					print_with_color("Не удалось добавить новый пароль",91);
+					print_with_color("Не удалось добавить новый пароль\n",91);
 				else
-					print_with_color("Не удалось добавить новый пароль. Ошибка ввода", 91);
+					print_with_color("Не удалось добавить новый пароль. Ошибка ввода\n", 91);
 
 				break;
 			}
 			case COMMAND_DELETE_PASSWORD:
 			{
 				struct PasswordStruct password;
+				printf("Введите значения пароля для удаления:\n");
+
+				int scan_res;
+				printf("Название пароля\t->");
+				scan_res = scanf("%s", password.name);
+				if (scan_res != 1)
+				{
+					handle_char_input_error();
+					continue;
+				}
+
+				printf("Описание пароля\t->");
+				scan_res = scanf("%s", password.description);
+				if (scan_res != 1)
+				{
+					handle_char_input_error();
+					continue;
+				}
+
+				printf("Логин\t\t->");
+				scan_res = scanf("%s", password.login);
+				if (scan_res != 1)
+				{
+					handle_char_input_error();
+					continue;
+				}
+
+				printf("Пароль\t\t->");
+				scan_res = scanf("%s", password.password);
+				if (scan_res != 1)
+				{
+					handle_char_input_error();
+					continue;
+				}
+				password.name		[sizeof(password.name		) - 1] = '\0';
+				password.description[sizeof(password.description) - 1] = '\0';
+				password.login		[sizeof(password.login		) - 1] = '\0';
+				password.password	[sizeof(password.password	) - 1] = '\0';
 				int res = DeletePassword(file, &password);
+
+				switch (res)
+				{
+					case 0:
+						print_with_color("Записи успешно удалены",96);
+					break;
+					case 1:
+						print_with_color("Не удалось перезаписать файл после удаления записей", 91);
+					break;
+					case 2:
+						if (file_size == 0)
+						{
+							print_with_color("Файл с паролями пуст", 95);
+							break;
+						}
+						print_with_color("Не удалось прочитать файл с записями",91);
+					break;
+					case 3:
+						print_with_color("Не найдено записей для удаления", 91);
+					break;
+				}
+				printf("\n");
+					
 				break;
 			}
+			case COMMAND_DELETE_PASSWORD_BY_NAME:
+			{
+				char name[PASSWORD_STRUCT_NAME_SIZE];
+				printf("Введите имя пароля для удаления:\n");
 
+				int scan_res;
+				printf("Название пароля\t->");
+				scan_res = scanf("%s", name);
+				if (scan_res != 1)
+				{
+					handle_char_input_error();
+					continue;
+				}
+
+				int res=DeletePasswordByName(file,name);
+				switch (res)
+				{
+				case 0:
+					print_with_color("Записи успешно удалены", 96);
+					break;
+				case 1:
+					print_with_color("Не удалось перезаписать файл после удаления записей", 91);
+					break;
+				case 2:
+					if (file_size == 0)
+					{
+						print_with_color("Файл с паролями пуст", 95);
+						break;
+					}
+					print_with_color("Не удалось прочитать файл с записями", 91);
+					break;
+				case 3:
+					print_with_color("Не найдено записей для удаления", 91);
+					break;
+				}
+				printf("\n");
+				break;
+			}
+			case COMMAND_DELETE_PASSWORD_BY_LOGIN:
+			{
+				char login[PASSWORD_STRUCT_LOGIN_SIZE];
+				printf("Введите логин для удаления записей:\n");
+
+				int scan_res;
+				printf("Логин\t\t->");
+				scan_res = scanf("%s", login);
+				if (scan_res != 1)
+				{
+					handle_char_input_error();
+					continue;
+				}
+
+				int res = DeletePasswordByLogin(file, login);
+				switch (res)
+				{
+				case 0:
+					print_with_color("Записи успешно удалены", 96);
+					break;
+				case 1:
+					print_with_color("Не удалось перезаписать файл после удаления записей", 91);
+					break;
+				case 2:
+					if (file_size == 0)
+					{
+						print_with_color("Файл с паролями пуст", 95);
+						break;
+					}
+					print_with_color("Не удалось прочитать файл с записями", 91);
+					break;
+				case 3:
+					print_with_color("Не найдено записей для удаления", 91);
+					break;
+				}
+				printf("\n");
+				break;
+			}
+			
 
 
 			case COMMAND_SHOW_ALL_PASSWORDS:
@@ -175,11 +356,20 @@ void Dialog(FILE** file)
 
 				struct PasswordStruct* passwords;
 				size_t passwords_quantity;
+
+				{
+					if (file_size == 0)
+					{
+						print_with_color("Файл с паролями пуст\n",95);
+						continue;
+					}
+				}
+					
 				passwords=GetAllPasswords(file,&passwords_quantity);
 
 				if (passwords == NULL)
 				{
-					print_with_color("Ошибка чтения паролей",91);
+					print_with_color("Ошибка чтения паролей\n",91);
 					continue;
 				}
 
@@ -204,34 +394,6 @@ void Dialog(FILE** file)
 
 int AddNewPassword(FILE** file, struct PasswordStruct* password_struct)
 {
-	printf("Введите значения для нового пароля:\n");
-
-	int scan_res;
-	printf("Название пароля\t->");
-	scan_res = scanf("%s",password_struct->name);
-	if(scan_res!=1)
-		return 2;
-
-	printf("Описание пароля\t->");
-	scan_res = scanf("%s",password_struct->description);
-	if (scan_res != 1)
-		return 2;
-
-	printf("Логин\t->");
-	scan_res = scanf("%s",password_struct->login);
-	if (scan_res != 1)
-		return 2;
-
-	printf("Пароль\t->");
-	scan_res = scanf("%s",password_struct->password);
-	if (scan_res != 1)
-		return 2;
-
-	password_struct->description[sizeof(password_struct->description) - 1] = '\0';
-	password_struct->login		[sizeof(password_struct->login		) - 1] = '\0';
-	password_struct->password	[sizeof(password_struct->password	) - 1] = '\0';
-	password_struct->name		[sizeof(password_struct->name		) - 1] = '\0';
-
 	long prev_file_pos=ftell(*file);
 	fseek(*file,0,SEEK_END);
 	if (fwrite(password_struct, sizeof(struct PasswordStruct), 1, *file)==1)
@@ -248,48 +410,176 @@ int AddNewPassword(FILE** file, struct PasswordStruct* password_struct)
 
 int DeletePassword(FILE** file, struct PasswordStruct* password_struct)
 {
-	printf("Введите значения пароля для удаления:\n");
+	size_t passwords_quantity;
+	struct PasswordStruct* passwords=GetAllPasswords(file,&passwords_quantity);
+	
+	size_t passwords_for_remove_quantity=0;
+	struct PasswordStruct** passwords_for_remove=NULL;
 
-	int scan_res;
-	printf("Название пароля\t->");
-	scan_res = scanf("%s", password_struct->name);
-	if (scan_res != 1)
+	if(!passwords)
 		return 2;
-
-	printf("Описание пароля\t->");
-	scan_res = scanf("%s", password_struct->description);
-	if (scan_res != 1)
-		return 2;
-
-	printf("Логин\t->");
-	scan_res = scanf("%s", password_struct->login);
-	if (scan_res != 1)
-		return 2;
-
-	printf("Пароль\t->");
-	scan_res = scanf("%s", password_struct->password);
-	if (scan_res != 1)
-		return 2;
-
-	password_struct->description[sizeof(password_struct->description) - 1] = '\0';
-	password_struct->login		[sizeof(password_struct->login		) - 1] = '\0';
-	password_struct->password	[sizeof(password_struct->password	) - 1] = '\0';
-	password_struct->name		[sizeof(password_struct->name		) - 1] = '\0';
 
 	
+	for(size_t i=0;i!=passwords_quantity;++i)
+		if(
+			strcmp(passwords[i].name		,password_struct->name			)==0 &&
+			strcmp(passwords[i].description	,password_struct->description	)==0 &&
+			strcmp(passwords[i].login		,password_struct->login			)==0 &&
+			strcmp(passwords[i].password	,password_struct->password		)==0
+		)
+			AddNewPasswordStructEmplace(&passwords_for_remove, &passwords_for_remove_quantity, passwords+i);
+
+	if(!passwords_for_remove_quantity)
+		return 3;
+
+	size_t passwords_for_rewrite_quantity=0;
+	struct PasswordStruct* passwords_for_rewrite=NULL;
+
+	for (size_t i = 0; i != passwords_quantity; ++i)
+	{
+		bool in_deleted=false;
+		for (size_t j = 0; j != passwords_for_remove_quantity; ++j)
+		{
+			if (passwords + i == passwords_for_remove[j])
+			{
+				in_deleted=true;
+				break;
+			}
+		}
+		
+		if(!in_deleted)
+			AddNewPasswordStruct(&passwords_for_rewrite,&passwords_for_rewrite_quantity, passwords + i);
+	}
+
+	*file = freopen(PASSWORD_FILE, "w", *file);
+	int res= WritePasswordStructs(file, passwords_for_rewrite, passwords_for_rewrite_quantity);
+
+	*file = freopen(PASSWORD_FILE, "r+", *file);
+
+	if(res)
+		return EXIT_FAILURE;
+
+	if(passwords_for_rewrite)
+		free(passwords_for_rewrite);
+	if(passwords_for_remove)
+		free(passwords_for_remove);
+	if(passwords)
+		free(passwords);
+
+	return EXIT_SUCCESS;
 }
 
 int DeletePasswordByName(FILE** file, const char* name)
 {
-	return 0;
+	size_t passwords_quantity;
+	struct PasswordStruct* passwords = GetAllPasswords(file, &passwords_quantity);
+
+	size_t passwords_for_remove_quantity = 0;
+	struct PasswordStruct** passwords_for_remove = NULL;
+
+	if (!passwords)
+		return 2;
+
+	for (size_t i = 0; i != passwords_quantity; ++i)
+		if (strcmp(passwords[i].name, name) == 0)
+			AddNewPasswordStructEmplace(&passwords_for_remove, &passwords_for_remove_quantity, passwords + i);
+
+	if (!passwords_for_remove_quantity)
+		return 3;
+
+	size_t passwords_for_rewrite_quantity = 0;
+	struct PasswordStruct* passwords_for_rewrite = NULL;
+
+	for (size_t i = 0; i != passwords_quantity; ++i)
+	{
+		bool in_deleted = false;
+		for (size_t j = 0; j != passwords_for_remove_quantity; ++j)
+		{
+			if (passwords + i == passwords_for_remove[j])
+			{
+				in_deleted = true;
+				break;
+			}
+		}
+
+		if (!in_deleted)
+			AddNewPasswordStruct(&passwords_for_rewrite, &passwords_for_rewrite_quantity, passwords + i);
+	}
+
+	*file = freopen(PASSWORD_FILE, "w", *file);
+	int res = WritePasswordStructs(file, passwords_for_rewrite, passwords_for_rewrite_quantity);
+
+	*file = freopen(PASSWORD_FILE, "r+", *file);
+
+	if (res)
+		return EXIT_FAILURE;
+
+	if (passwords_for_rewrite)
+		free(passwords_for_rewrite);
+	if (passwords_for_remove)
+		free(passwords_for_remove);
+	if (passwords)
+		free(passwords);
+
+	return EXIT_SUCCESS;
 }
 
 int DeletePasswordByLogin(FILE** file, const char* login)
 {
-	return 0;
+	size_t passwords_quantity;
+	struct PasswordStruct* passwords = GetAllPasswords(file, &passwords_quantity);
+
+	size_t passwords_for_remove_quantity = 0;
+	struct PasswordStruct** passwords_for_remove = NULL;
+
+	if (!passwords)
+		return 2;
+
+	for (size_t i = 0; i != passwords_quantity; ++i)
+		if (strcmp(passwords[i].login, login) == 0)
+			AddNewPasswordStructEmplace(&passwords_for_remove, &passwords_for_remove_quantity, passwords + i);
+
+	if (!passwords_for_remove_quantity)
+		return 3;
+
+	size_t passwords_for_rewrite_quantity = 0;
+	struct PasswordStruct* passwords_for_rewrite = NULL;
+
+	for (size_t i = 0; i != passwords_quantity; ++i)
+	{
+		bool in_deleted = false;
+		for (size_t j = 0; j != passwords_for_remove_quantity; ++j)
+		{
+			if (passwords + i == passwords_for_remove[j])
+			{
+				in_deleted = true;
+				break;
+			}
+		}
+
+		if (!in_deleted)
+			AddNewPasswordStruct(&passwords_for_rewrite, &passwords_for_rewrite_quantity, passwords + i);
+	}
+
+	*file = freopen(PASSWORD_FILE, "w", *file);
+	int res = WritePasswordStructs(file, passwords_for_rewrite, passwords_for_rewrite_quantity);
+
+	*file = freopen(PASSWORD_FILE, "r+", *file);
+
+	if (res)
+		return EXIT_FAILURE;
+
+	if (passwords_for_rewrite)
+		free(passwords_for_rewrite);
+	if (passwords_for_remove)
+		free(passwords_for_remove);
+	if (passwords)
+		free(passwords);
+
+	return EXIT_SUCCESS;
 }
 
-struct PasswordStruct* FindPasswords(struct PasswordStruct* params, int mode)
+struct PasswordStruct* FindPasswords(struct PasswordStruct* params, int flags)
 {
 	return NULL;
 }

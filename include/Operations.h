@@ -7,6 +7,12 @@
 #include "PasswordStruct.h"
 
 void print_with_color(const char* format, int color, ...);
+inline void handle_char_input_error()
+{
+	int c;
+	while ((c = getchar()) != '\n' && c != EOF);
+	print_with_color("Ошибка ввода!\n",91);
+}
 
 
 #define COMMAND_EXIT						0
@@ -50,7 +56,6 @@ inline void CLS(){system("cls"); };
 /// <returns>
 /// 0 - успех
 /// 1 - ошибка записи в файл
-/// 2 - ошибка ввода данных
 /// </returns>
 int AddNewPassword(FILE** file, struct PasswordStruct* password_struct);
 /// <summary>
@@ -60,12 +65,34 @@ int AddNewPassword(FILE** file, struct PasswordStruct* password_struct);
 /// <param name="password_struct"></param>
 /// <returns>
 /// 0 - успех
-/// 1 - ошибка переписания файла
-/// 2 - ошибка ввода данных
+/// 1 - ошибка перезаписи файла
+/// 2 - ошибка чтения файла
 /// 3 - не найдены пароли для удаления
 /// </returns>
 int DeletePassword(FILE** file, struct PasswordStruct* password_struct);
+/// <summary>
+/// 
+/// </summary>
+/// <param name="file"></param>
+/// <param name="password_struct"></param>
+/// <returns>
+/// 0 - успех
+/// 1 - ошибка перезаписи файла
+/// 2 - ошибка чтения файла
+/// 3 - не найдены пароли для удаления
+/// </returns>
 int DeletePasswordByName(FILE** file, const char* name);
+/// <summary>
+/// 
+/// </summary>
+/// <param name="file"></param>
+/// <param name="password_struct"></param>
+/// <returns>
+/// 0 - успех
+/// 1 - ошибка перезаписи файла
+/// 2 - ошибка чтения файла
+/// 3 - не найдены пароли для удаления
+/// </returns>
 int DeletePasswordByLogin(FILE** file, const char* login);
 inline struct PasswordStruct* GetAllPasswords(FILE** file, size_t* size)
 {
@@ -96,4 +123,4 @@ inline struct PasswordStruct* GetAllPasswords(FILE** file, size_t* size)
 /// 1 - Содержит внутри параметра
 /// </param>
 /// <returns></returns>
-struct PasswordStruct* FindPasswords(struct PasswordStruct* params, int mode);
+struct PasswordStruct* FindPasswords(struct PasswordStruct* params, int flags);

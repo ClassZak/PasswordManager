@@ -17,6 +17,11 @@ struct PasswordStruct
 	char name[50];
 };
 
+#define PASSWORD_STRUCT_NAME_SIZE			50
+#define PASSWORD_STRUCT_DESCRIPTION_SIZE	200
+#define PASSWORD_STRUCT_LOGIN_SIZE			100
+#define PASSWORD_STRUCT_PASSWORD_SIZE		100
+
 long getFileSize(FILE** file);
 
 int ReadPasswordStruct
@@ -28,6 +33,22 @@ int WritePasswordStruct
 (
 	FILE** file,
 	struct PasswordStruct* password_struct
+);
+/// <summary>
+/// 
+/// </summary>
+/// <param name="file"></param>
+/// <param name="password_struct"></param>
+/// <param name="size"></param>
+/// <returns>
+/// 0 - успех
+/// 1 - ошибка
+/// </returns>
+int WritePasswordStructs
+(
+	FILE** file,
+	struct PasswordStruct* password_struct,
+	size_t size
 );
 
 struct PasswordStruct* ReadAllPasswordStructs(FILE** file, size_t* size);

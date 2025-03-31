@@ -46,6 +46,17 @@ int WritePasswordStruct
 	return (int)!res;
 }
 
+int WritePasswordStructs(FILE** file, struct PasswordStruct* password_struct, size_t size)
+{
+	if (!password_struct || !size)
+		return EXIT_FAILURE;
+
+	size_t res =
+	fwrite(password_struct, sizeof(struct PasswordStruct), size, *file);
+
+	return (int)!res;
+}
+
 struct PasswordStruct* ReadAllPasswordStructs(FILE** file, size_t* size)
 {
 	*size=0;
@@ -91,6 +102,9 @@ int AddNewPasswordStruct(struct PasswordStruct** array, size_t* arraySize, struc
 			strcpy((*array)->login		, newElement->login		);
 			strcpy((*array)->password	, newElement->password	);
 		}
+		else
+			return EXIT_FAILURE;
+
 		*arraySize=1;
 
 		return EXIT_SUCCESS;
