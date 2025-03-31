@@ -49,6 +49,11 @@ int WritePasswordStruct
 struct PasswordStruct* ReadAllPasswordStructs(FILE** file, size_t* size)
 {
 	*size=0;
+
+	long prev_pos=ftell(*file);
+	fseek(*file,0,SEEK_SET);
+
+
 	long file_size= getFileSize(file);
 	if(file_size%sizeof(struct PasswordStruct) || !file_size)
 		return NULL;
@@ -61,6 +66,72 @@ struct PasswordStruct* ReadAllPasswordStructs(FILE** file, size_t* size)
 	
 	*size=passwords_quantity;
 
+	fseek(*file,prev_pos,SEEK_SET);
+
 	return passwords;
+}
+
+int AddNewPasswordStruct(struct PasswordStruct** array, size_t* arraySize, struct PasswordStruct* newElement)
+{
+	if(!array)
+		return 2;
+	if (!arraySize)
+		return 3;
+		
+	if(!newElement)
+		return 4;
+
+	if (!*array)
+	{
+		*array=malloc(sizeof(struct PasswordStruct));
+		if (*array != NULL)
+		{
+			strcpy((*array)->name		, newElement->name		);
+			strcpy((*array)->description, newElement->description);
+			strcpy((*array)->login		, newElement->login		);
+			strcpy((*array)->password	, newElement->password	);
+		}
+		*arraySize=1;
+
+		return EXIT_SUCCESS;
+	}
+	else
+	{
+		struct PasswordStruct* old_array=malloc(sizeof(struct PasswordStruct)*(*arraySize));
+
+		if(old_array!=NULL)
+			for (size_t i = 0; i != *arraySize; i++)
+			{
+				strcpy(old_array[i].name		, (*array)->name		);
+				strcpy(old_array[i].description	, (*array)->description	);
+				strcpy(old_array[i].login		, (*array)->login		);
+				strcpy(old_array[i].password	, (*array)->password	);
+			}
+
+		free(*array);
+		*array=malloc(sizeof(struct PasswordStruct) * ((*arraySize)+1));
+
+		if (old_array && *array)
+		{
+			for (size_t i = 0; i != *arraySize; ++i)
+			{
+				strcpy(((*array)+i)->name		,old_array[i].name			);
+				strcpy(((*array)+i)->description,old_array[i].description	);
+				strcpy(((*array)+i)->login		,old_array[i].login			);
+				strcpy(((*array)+i)->password	,old_array[i].password		);
+			}
+
+			strcpy(((*array)[*arraySize]).name			, newElement->name			);
+			strcpy(((*array)[*arraySize]).description	, newElement->description	);
+			strcpy(((*array)[*arraySize]).login			, newElement->login			);
+			strcpy(((*array)[*arraySize]).password		, newElement->password		);
+
+			++(*arraySize);
+
+			return EXIT_SUCCESS;
+		}
+		else
+			return EXIT_FAILURE;
+	}
 }
 

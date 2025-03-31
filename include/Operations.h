@@ -21,6 +21,20 @@ void print_with_color(const char* format, int color, ...);
 
 #define COMMNAD_FIRST	COMMAND_EXIT
 #define COMMNAD_LAST	COMMAND_SHOW_ALL_PASSWORDS
+/// <summary>
+/// 
+/// </summary>
+/// <param name="array"></param>
+/// <param name="arraySize"></param>
+/// <param name="newElement"></param>
+/// <returns>
+/// 0 - успешное добавление
+/// 1 - ошибка выделения памяти
+/// 2 - выбран неверный указатель на массив
+/// 3 - выбран неверный указатель на длину массива
+/// 4 - выбран неверный указатель на новый элемент
+/// </returns>
+int AddNewPasswordStructEmplace(struct PasswordStruct*** array, size_t* arraySize, struct PasswordStruct* newElement);
 
 
 
@@ -39,6 +53,17 @@ inline void CLS(){system("cls"); };
 /// 2 - ошибка ввода данных
 /// </returns>
 int AddNewPassword(FILE** file, struct PasswordStruct* password_struct);
+/// <summary>
+/// 
+/// </summary>
+/// <param name="file"></param>
+/// <param name="password_struct"></param>
+/// <returns>
+/// 0 - успех
+/// 1 - ошибка переписания файла
+/// 2 - ошибка ввода данных
+/// 3 - не найдены пароли для удаления
+/// </returns>
 int DeletePassword(FILE** file, struct PasswordStruct* password_struct);
 int DeletePasswordByName(FILE** file, const char* name);
 int DeletePasswordByLogin(FILE** file, const char* login);

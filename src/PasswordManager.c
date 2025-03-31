@@ -199,7 +199,6 @@ int main(int argc, char** argv)
 	FILE* file=fopen(PASSWORD_FILE,"r+");
 
 	Dialog(&file);
-
 	fclose(file);
 	system("pause");
 

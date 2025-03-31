@@ -1,7 +1,7 @@
 #pragma once
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <string.h>
 
 #ifndef PASSWORD_FILE 
 #define PASSWORD_FILE ".Passwords.bin"
@@ -31,3 +31,17 @@ int WritePasswordStruct
 );
 
 struct PasswordStruct* ReadAllPasswordStructs(FILE** file, size_t* size);
+/// <summary>
+/// 
+/// </summary>
+/// <param name="array"></param>
+/// <param name="arraySize"></param>
+/// <param name="newElement"></param>
+/// <returns>
+/// 0 - успешное добавление
+/// 1 - ошибка выделения памяти
+/// 2 - выбран неверный указатель на массив
+/// 3 - выбран неверный указатель на длину массива
+/// 4 - выбран неверный указатель на новый элемент
+/// </returns>
+int AddNewPasswordStruct(struct PasswordStruct** array,size_t* arraySize, struct PasswordStruct* newElement);
