@@ -1,6 +1,6 @@
 #include "PasswordStruct.h"
 
-long GetFileSize(FILE** file)
+long getFileSize(FILE** file)
 {
 	long size, prev_pos = ftell(*file);
 
@@ -46,9 +46,10 @@ int WritePasswordStruct
 	return (int)!res;
 }
 
-struct PasswordStruct* ReadAllPasswordStructs(FILE** file)
+struct PasswordStruct* ReadAllPasswordStructs(FILE** file, size_t* size)
 {
-	long file_size= GetFileSize(file);
+	*size=0;
+	long file_size= getFileSize(file);
 	if(file_size%sizeof(struct PasswordStruct) || !file_size)
 		return NULL;
 
@@ -58,6 +59,8 @@ struct PasswordStruct* ReadAllPasswordStructs(FILE** file)
 	for(int i=0;i<passwords_quantity;++i)
 		ReadPasswordStruct(file,passwords+i);
 	
+	*size=passwords_quantity;
+
 	return passwords;
 }
 

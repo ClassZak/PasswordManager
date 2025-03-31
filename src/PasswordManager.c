@@ -13,6 +13,7 @@
 #endif
 
 #include "PasswordStruct.h"
+#include "Operations.h"
 
 #ifndef PASSWORD_FILE 
 #define PASSWORD_FILE ".Passwords.bin"
@@ -196,21 +197,10 @@ int main(int argc, char** argv)
 	CheckPasswordStorage();
 
 	FILE* file=fopen(PASSWORD_FILE,"r+");
-	struct PasswordStruct password_struct;
-	strcpy(password_struct.description,"sgs2dsf");
-	strcpy(password_struct.login,"sugoma");
-	strcpy(password_struct.password,"228");
-	strcpy(password_struct.name,"sus");
 
-	WritePasswordStruct(&file,&password_struct);
-	fseek(file,0,SEEK_SET);
+	Dialog(&file);
 
-
-	struct PasswordStruct* passwords= ReadAllPasswordStructs(&file);
-
-	free(passwords);
 	fclose(file);
-
 	system("pause");
 
 	return EXIT_SUCCESS;

@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
 #ifndef PASSWORD_FILE 
 #define PASSWORD_FILE ".Passwords.bin"
 #endif // !PASSWORD_FILE 
@@ -16,7 +17,7 @@ struct PasswordStruct
 	char name[50];
 };
 
-long GetFileSize(FILE** file);
+long getFileSize(FILE** file);
 
 int ReadPasswordStruct
 (
@@ -29,4 +30,4 @@ int WritePasswordStruct
 	struct PasswordStruct* password_struct
 );
 
-struct PasswordStruct* ReadAllPasswordStructs(FILE** file);
+struct PasswordStruct* ReadAllPasswordStructs(FILE** file, size_t* size);
