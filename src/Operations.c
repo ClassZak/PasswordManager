@@ -348,9 +348,74 @@ void Dialog(FILE** file)
 				printf("\n");
 				break;
 			}
-			
+			case COMMAND_FIND_PASSWORDS:
+			{
+				printf("Выберете атрибуты для поска\n");
+				bool name_attr=false,description_attr=false,login_attr=false,password_attr=false,find_by_content=false;
+				int scan_res;
+				int scan_bool;
+				printf("Включить поиск по названию\t\t(0 чтобы отклонить) ->");
+				scan_res = scanf("%d", &scan_bool);
+				if (scan_res != 1)
+				{
+					handle_char_input_error();
+					continue;
+				}
+				name_attr= scan_bool;
 
+				printf("Включить поиск по описанию\t\t(0 чтобы отклонить) ->");
+				scan_res = scanf("%d", &scan_bool);
+				if (scan_res != 1)
+				{
+					handle_char_input_error();
+					continue;
+				}
+				description_attr = scan_bool;
 
+				printf("Включить поиск по логину\t\t(0 чтобы отклонить) ->");
+				scan_res = scanf("%d", &scan_bool);
+				if (scan_res != 1)
+				{
+					handle_char_input_error();
+					continue;
+				}
+				login_attr = scan_bool;
+
+				printf("Включить поиск по паролю\t\t(0 чтобы отклонить) ->");
+				scan_res = scanf("%d", &scan_bool);
+				if (scan_res != 1)
+				{
+					handle_char_input_error();
+					continue;
+				}
+				password_attr = scan_bool;
+
+				printf("Выберете тип поиска:\n");
+				print_with_color("0 - Поиск по точным совпадениям. Любое другое чило - Поиск по содержимому\n",90);
+				printf("->");
+				find_by_content = scanf("%d", &scan_bool);
+				if (scan_res != 1)
+				{
+					handle_char_input_error();
+					continue;
+				}
+
+				size_t passwords_quantity;
+				struct PasswordStruct* passwords=GetAllPasswords(file,&passwords_quantity);
+				int flags=
+						(PASSWORD_STRUCT_FIND_BY_NAME			& (name_attr		<< 4))|
+						(PASSWORD_STRUCT_FIND_BY_LOGIN			& (login_attr		<< 3))|
+						(PASSWORD_STRUCT_FIND_BY_PASSWORD		& (password_attr	<< 2))|
+						(PASSWORD_STRUCT_FIND_BY_DESCRIPTION	& (description_attr	<< 1))|
+						(PASSWORD_STRUCT_FIND_CONTAINS			& (find_by_content	<< 0));
+				struct PasswordStruct* founded_passwords=FindPasswords
+				(
+					passwords, 
+					flags
+				);
+
+				break;
+			}
 			case COMMAND_SHOW_ALL_PASSWORDS:
 			{
 
@@ -388,7 +453,6 @@ void Dialog(FILE** file)
 				break;
 			}
 		}
-
 	}
 }
 
