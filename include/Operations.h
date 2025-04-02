@@ -13,6 +13,19 @@ inline void handle_char_input_error()
 	while ((c = getchar()) != '\n' && c != EOF);
 	print_with_color("Ошибка ввода!\n",91);
 }
+inline void print_passwords(struct PasswordStruct* passwords, size_t size)
+{
+	for(size_t i=0;i!=size;++i)
+		printf
+		(
+			"Название:\t%s\n\
+Описание:\t%s\n\
+Логин:\t\t%s\n\
+Пароль:\t\t%s\n\
+\n",
+			passwords[i].name, passwords[i].description, passwords[i].login, passwords[i].password
+		);
+}
 
 
 #define COMMAND_EXIT						0
@@ -104,8 +117,6 @@ inline struct PasswordStruct* GetAllPasswords(FILE** file, size_t* size)
 #define PASSWORD_STRUCT_FIND_BY_PASSWORD	0b00100
 #define PASSWORD_STRUCT_FIND_BY_DESCRIPTION	0b00010
 #define PASSWORD_STRUCT_FIND_CONTAINS		0b00001
-
-#define PASSWORD_STRUCT_FIND_ALL_STRUCT		0b11111
 /// <summary>
 /// Функция поиска паролей
 /// </summary>
@@ -124,5 +135,17 @@ inline struct PasswordStruct* GetAllPasswords(FILE** file, size_t* size)
 /// 2 - Совпадение по описанию
 /// 1 - Содержит внутри параметра
 /// </param>
-/// <returns></returns>
-struct PasswordStruct* FindPasswords(struct PasswordStruct* params, int flags);
+/// <returns>
+/// 0 - успех
+/// 1 - ошибка чтения файла
+/// 2 - файл с записями пуст
+/// 3 - записей не найдено
+/// </returns>
+int FindPasswords
+(
+	FILE** file,
+	struct PasswordStruct* params,
+	struct PasswordStruct** founded_passwords,
+	size_t* founded_passwords_quantity,
+	int flags
+);

@@ -391,28 +391,118 @@ void Dialog(FILE** file)
 				password_attr = scan_bool;
 
 				printf("Выберете тип поиска:\n");
-				print_with_color("0 - Поиск по точным совпадениям. Любое другое чило - Поиск по содержимому\n",90);
+				print_with_color("1 - Поиск по точным совпадениям. 0 - Поиск по содержимому\n",90);
 				printf("->");
-				find_by_content = scanf("%d", &scan_bool);
+				scan_res = scanf("%d", &scan_bool);
+				find_by_content = !scan_bool;
 				if (scan_res != 1)
 				{
 					handle_char_input_error();
 					continue;
 				}
 
+				if (!name_attr && !description_attr && !login_attr && !password_attr)
+				{
+					print_with_color("Нет никаких критериев поиска\n",91);
+					continue;
+				}
+
 				size_t passwords_quantity;
-				struct PasswordStruct* passwords=GetAllPasswords(file,&passwords_quantity);
+				struct PasswordStruct password;
+				printf("Введите значения пароля для поиска:\n");
+
+				if (name_attr)
+				{
+					printf("Название пароля\t->");
+					scan_res = scanf("%s", password.name);
+					if (scan_res != 1)
+					{
+						handle_char_input_error();
+						continue;
+					}
+				}
+
+				if (description_attr)
+				{
+					printf("Описание пароля\t->");
+					scan_res = scanf("%s", password.description);
+					if (scan_res != 1)
+					{
+						handle_char_input_error();
+						continue;
+					}
+				}
+
+				if (login_attr)
+				{
+					printf("Логин\t\t->");
+					scan_res = scanf("%s", password.login);
+					if (scan_res != 1)
+					{
+						handle_char_input_error();
+						continue;
+					}
+				}
+
+				if (password_attr)
+				{
+					printf("Пароль\t\t->");
+					scan_res = scanf("%s", password.password);
+					if (scan_res != 1)
+					{
+						handle_char_input_error();
+						continue;
+					}
+				}
+				password.name		[sizeof(password.name		) - 1] = '\0';
+				password.description[sizeof(password.description) - 1] = '\0';
+				password.login		[sizeof(password.login		) - 1] = '\0';
+				password.password	[sizeof(password.password	) - 1] = '\0';
+
 				int flags=
 						(PASSWORD_STRUCT_FIND_BY_NAME			& (name_attr		<< 4))|
 						(PASSWORD_STRUCT_FIND_BY_LOGIN			& (login_attr		<< 3))|
 						(PASSWORD_STRUCT_FIND_BY_PASSWORD		& (password_attr	<< 2))|
 						(PASSWORD_STRUCT_FIND_BY_DESCRIPTION	& (description_attr	<< 1))|
 						(PASSWORD_STRUCT_FIND_CONTAINS			& (find_by_content	<< 0));
-				struct PasswordStruct* founded_passwords=FindPasswords
+				struct PasswordStruct* founded_passwords=NULL;
+				size_t founded_passwords_quantity=0;
+				int res=FindPasswords
 				(
-					passwords, 
+					file,
+					&password,
+					&founded_passwords,
+					&founded_passwords_quantity,
 					flags
 				);
+
+				printf("\n");
+				switch (res)
+				{
+					case EXIT_SUCCESS:
+					{
+						print_with_color("Найденные записи: \n",96);
+						print_passwords(founded_passwords, founded_passwords_quantity);
+						break;
+					}
+					case EXIT_FAILURE:
+					{
+						print_with_color("Не удалось прочитать данные из файла: \n",96);
+						break;
+					}
+					case 2:
+					{
+						print_with_color("Файл с паролями пуст\n", 95);
+						break;
+					}
+					case 3:
+					{
+						print_with_color("Записей не найдено\n", 93);
+						break;
+					}
+				default:
+					break;
+				}
 
 				break;
 			}
@@ -438,16 +528,7 @@ void Dialog(FILE** file)
 					continue;
 				}
 
-				for (int i = 0; i != passwords_quantity; ++i)
-				{
-					printf("Название:\t%s\n\
-Описание:\t%s\n\
-Логин:\t\t%s\n\
-Пароль:\t\t%s\n\
-\n",
-						passwords[i].name,passwords[i].description,passwords[i].login,passwords[i].password
-					);
-				}
+				print_passwords(passwords,passwords_quantity);
 				free(passwords);
 
 				break;
@@ -643,7 +724,108 @@ int DeletePasswordByLogin(FILE** file, const char* login)
 	return EXIT_SUCCESS;
 }
 
-struct PasswordStruct* FindPasswords(struct PasswordStruct* params, int flags)
+int FindPasswords
+(
+	FILE** file,
+	struct PasswordStruct* params,
+	struct PasswordStruct** founded_passwords,
+	size_t* founded_passwords_quantity,
+	int flags
+)
 {
-	return NULL;
+	if(params==NULL)
+		return 3;
+
+	size_t passwords_quantity;
+	long file_size=getFileSize(file);
+	struct PasswordStruct* passwords = GetAllPasswords(file, &passwords_quantity);
+	if(file_size && !passwords)
+		return 1;
+	else if(!file_size && !passwords)
+		return 2;
+
+
+	if (*founded_passwords != NULL)
+	{
+		free(*founded_passwords);
+		*founded_passwords = NULL;
+	}
+
+	if (flags & PASSWORD_STRUCT_FIND_CONTAINS)
+	{
+		for (size_t i = 0; i != passwords_quantity; ++i)
+		{
+			bool equals=true;
+			if (flags & PASSWORD_STRUCT_FIND_BY_NAME)
+			{
+				equals=strcmp(params->name,passwords[i].name)==0;
+				if(!equals)
+					continue;
+			}
+
+			if (flags & PASSWORD_STRUCT_FIND_BY_DESCRIPTION)
+			{
+				equals=strcmp(params->description,passwords[i].description)==0;
+				if (!equals)
+					continue;
+			}
+
+			if (flags & PASSWORD_STRUCT_FIND_BY_LOGIN)
+			{
+				equals=strcmp(params->login,passwords[i].login)==0;
+				if (!equals)
+					continue;
+			}
+
+			if (flags & PASSWORD_STRUCT_FIND_BY_PASSWORD)
+			{
+				equals=strcmp(params->password,passwords[i].password)==0;
+				if (!equals)
+					continue;
+			}
+
+			AddNewPasswordStruct(founded_passwords,founded_passwords_quantity,passwords+i);
+		}
+	}
+	else
+	{
+		for (size_t i = 0; i != passwords_quantity; ++i)
+		{
+			bool contains = true;
+			if (flags & PASSWORD_STRUCT_FIND_BY_NAME)
+			{
+				contains = strstr(passwords[i].name,params->name);
+				if (!contains)
+					continue;
+			}
+
+			if (flags & PASSWORD_STRUCT_FIND_BY_DESCRIPTION)
+			{
+				contains = strstr(passwords[i].description, params->description);
+				if (!contains)
+					continue;
+			}
+
+			if (flags & PASSWORD_STRUCT_FIND_BY_LOGIN)
+			{
+				contains = strstr(passwords[i].login, params->login);
+				if (!contains)
+					continue;
+			}
+
+			if (flags & PASSWORD_STRUCT_FIND_BY_PASSWORD)
+			{
+				contains = strstr(passwords[i].password, params->password);
+				if (!contains)
+					continue;
+			}
+
+			AddNewPasswordStruct(founded_passwords, founded_passwords_quantity, passwords + i);
+		}
+	}
+
+	if(!(*founded_passwords))
+		return 3;
+	
+	return EXIT_SUCCESS;
 }
