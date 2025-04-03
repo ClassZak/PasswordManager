@@ -129,7 +129,7 @@ void CheckPasswordStorage()
 	}
 	CloseHandle(hFile);
 #elif defined __unix__
-	FILE* file = fopen(PASSWORD_FILE, 'rb');
+	FILE* file = fopen(PASSWORD_FILE, "rb");
 	if (!file)
 	{
 		printf("Îøèáêà ïðè îòêðûòèè ôàéëà-õðàíèëèùà \"%s\"\n", PASSWORD_FILE);
@@ -172,7 +172,8 @@ void CheckPasswordStorage()
 			}
 		}
 	}
-	fclose(file);
+	if(file)
+		fclose(file);
 #endif
 	if (!file_exists)
 	{

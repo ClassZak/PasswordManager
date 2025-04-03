@@ -24,7 +24,6 @@ add_executable(
         ${CMAKE_SOURCE_DIR}/src/PasswordManager.c
         ${CMAKE_SOURCE_DIR}/src/PasswordStruct.c
         ${CMAKE_SOURCE_DIR}/src/Operations.c
-        ${CMAKE_SOURCE_DIR}/src/CommandHistory.c
 )
 
 target_include_directories(
