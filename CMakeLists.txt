@@ -4,7 +4,11 @@
 if (POLICY CMP0141)
     cmake_policy(SET CMP0141 NEW)
     if(MSVC)
-        set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
+        set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT 
+            "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,
+            $<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,
+            $<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>"
+        )
     endif()
 endif()
 
@@ -46,7 +50,5 @@ if(MSVC)
     )
 else()
     # Для GCC/Clang используем -O0
-    target_compile_options(PasswordManager PRIVATE
-        $<IF:$<OR:$<CONFIG:Debug>,$<CONFIG:Release>,$<CONFIG:RelWithDebInfo>,$<CONFIG:MinSizeRel>>,-O0>
-    )
+    target_compile_options(PasswordManager PRIVATE -O0)
 endif()
