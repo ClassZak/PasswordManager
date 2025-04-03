@@ -79,51 +79,52 @@ void CheckPasswordStorage()
 	if (hFile == INVALID_HANDLE_VALUE)
 	{
 		DWORD error = GetLastError();
+		printf("Ошибка при открытии файла-хранилища \"%s\"\n", PASSWORD_FILE);
+		printf("Ошибка: ");
+
 		switch (error)
 		{
-			printf("Ошибка при открытии файла-хранилища \"%s\"\n", PASSWORD_FILE);
-			printf("Ошибка: ");
-		case ERROR_FILE_NOT_FOUND:
-		{
-			file_exists = false;
-			printf("файл не найден\n");
-			break;
-		}
-		case ERROR_PATH_NOT_FOUND:
-		{
-			file_exists = false;
-			printf("путь не найден\n");
-			break;
-		}
-		case ERROR_ACCESS_DENIED:
-		{
-			printf("нет доступа\n");
-			break;
-		}
-		case ERROR_SHARING_VIOLATION:
-		{
-			printf("файл занят другим процессом");
-			break;
-		}
-		default:
-		{
-			printf("%d", error);
-			break;
-		}
+			case ERROR_FILE_NOT_FOUND:
+			{
+				file_exists = false;
+				printf("файл не найден\n");
+				break;
+			}
+			case ERROR_PATH_NOT_FOUND:
+			{
+				file_exists = false;
+				printf("путь не найден\n");
+				break;
+			}
+			case ERROR_ACCESS_DENIED:
+			{
+				printf("нет доступа\n");
+				break;
+			}
+			case ERROR_SHARING_VIOLATION:
+			{
+				printf("файл занят другим процессом");
+				break;
+			}
+			default:
+			{
+				printf("%d", error);
+				break;
+			}
 		}
 		switch (error)
 		{
-		case ERROR_FILE_NOT_FOUND:
-		case ERROR_PATH_NOT_FOUND:
-			break;
-		case ERROR_ACCESS_DENIED:
-		case ERROR_SHARING_VIOLATION:
-			exit(error);
-		default:
-		{
-			exit(error);
-			break;
-		}
+			case ERROR_FILE_NOT_FOUND:
+			case ERROR_PATH_NOT_FOUND:
+				break;
+			case ERROR_ACCESS_DENIED:
+			case ERROR_SHARING_VIOLATION:
+				exit(error);
+			default:
+			{
+				exit(error);
+				break;
+			}
 		}
 	}
 	CloseHandle(hFile);
@@ -135,40 +136,40 @@ void CheckPasswordStorage()
 		printf("Ошибка: ");
 		switch (errno)
 		{
-		case ENOENT:
-		{
-			printf("файл не нейден");
-			file_exists = false;
-			break;
-		}
-		case EACCES:
-		{
-			printf("нет доступа к файлу");
-			break;
-		}
-		case EBUSY:
-		{
-			printf("файл занят другим процессом");
-			break;
-		}
-		default:
-		{
-			print("%d", strerror(errno));
-			break;
-		}
-		}
-		switch (errno)
-		{
-		case ENOENT:
-			break;
-		case EACCES:
-		case EBUSY:
-			exit(errno);
-		default:
-		{
-			exit(errno);
-			break;
-		}
+			case ENOENT:
+			{
+				printf("файл не нейден");
+				file_exists = false;
+				break;
+			}
+			case EACCES:
+			{
+				printf("нет доступа к файлу");
+				break;
+			}
+			case EBUSY:
+			{
+				printf("файл занят другим процессом");
+				break;
+			}
+			default:
+			{
+				print("%d", strerror(errno));
+				break;
+			}
+			}
+			switch (errno)
+			{
+			case ENOENT:
+				break;
+			case EACCES:
+			case EBUSY:
+				exit(errno);
+			default:
+			{
+				exit(errno);
+				break;
+			}
 		}
 	}
 	fclose(file);
