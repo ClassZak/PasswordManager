@@ -5,7 +5,7 @@
 
 #ifdef _WIN32
 #include <windows.h>
-#elif 
+#else 
 #ifdef _UNIX
 #include <errno.h>
 #include <unistd.h>
@@ -32,20 +32,20 @@ int TryToCreateFile(const char** filename) // 0 - успех. Остальное - ошибка
 		FILE_ATTRIBUTE_NORMAL,
 		NULL
 	);
-#elif _UNIX
+#else _UNIX
 	FILE* file = fopen(filename, "w");
 #endif
 
 #ifdef _WIN32
 	if (hFile == INVALID_HANDLE_VALUE)
-#elif _UNIX
+#else _UNIX
 	if (!file)
 #endif
 	{
 		int last_error;
 #ifdef _WIN32	
 		last_error = GetLastError();
-#elif _UNIX
+#else _UNIX
 		last_error = errno;
 #endif
 		return last_error;
@@ -53,7 +53,7 @@ int TryToCreateFile(const char** filename) // 0 - успех. Остальное - ошибка
 
 #ifdef _WIN32	
 	CloseHandle(hFile);
-#elif _UNIX
+#else _UNIX
 	fclose(file);
 #endif
 
@@ -127,7 +127,7 @@ void CheckPasswordStorage()
 		}
 	}
 	CloseHandle(hFile);
-#elif _UNIX
+#else _UNIX
 	FILE* file = fopen(PASSWORD_FILE, 'rb');
 	if (!file)
 	{
