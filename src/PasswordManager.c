@@ -157,16 +157,16 @@ void CheckPasswordStorage()
 			break;
 		}
 		}
-		switch (error)
+		switch (errno)
 		{
 		case ENOENT:
 			break;
 		case EACCES:
 		case EBUSY:
-			exit(error);
+			exit(errno);
 		default:
 		{
-			exit(error);
+			exit(errno);
 			break;
 		}
 		}
