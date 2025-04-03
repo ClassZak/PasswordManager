@@ -19,7 +19,7 @@
 #define PASSWORD_FILE ".Passwords.bin"
 #endif // !PASSWORD_FILE 
 
-int TryToCreateFile(const char** filename) // 0 - успех. Остальное - ошибка
+int TryToCreateFile(const char** filename) // 0 - ГіГ±ГЇГҐГµ. ГЋГ±ГІГ Г«ГјГ­Г®ГҐ - Г®ГёГЁГЎГЄГ 
 {
 #ifdef _WIN32
 	HANDLE hFile = CreateFileA
@@ -79,31 +79,31 @@ void CheckPasswordStorage()
 	if (hFile == INVALID_HANDLE_VALUE)
 	{
 		DWORD error = GetLastError();
-		printf("Ошибка при открытии файла-хранилища \"%s\"\n", PASSWORD_FILE);
-		printf("Ошибка: ");
+		printf("ГЋГёГЁГЎГЄГ  ГЇГ°ГЁ Г®ГІГЄГ°Г»ГІГЁГЁ ГґГ Г©Г«Г -ГµГ°Г Г­ГЁГ«ГЁГ№Г  \"%s\"\n", PASSWORD_FILE);
+		printf("ГЋГёГЁГЎГЄГ : ");
 
 		switch (error)
 		{
 			case ERROR_FILE_NOT_FOUND:
 			{
 				file_exists = false;
-				printf("файл не найден\n");
+				printf("ГґГ Г©Г« Г­ГҐ Г­Г Г©Г¤ГҐГ­\n");
 				break;
 			}
 			case ERROR_PATH_NOT_FOUND:
 			{
 				file_exists = false;
-				printf("путь не найден\n");
+				printf("ГЇГіГІГј Г­ГҐ Г­Г Г©Г¤ГҐГ­\n");
 				break;
 			}
 			case ERROR_ACCESS_DENIED:
 			{
-				printf("нет доступа\n");
+				printf("Г­ГҐГІ Г¤Г®Г±ГІГіГЇГ \n");
 				break;
 			}
 			case ERROR_SHARING_VIOLATION:
 			{
-				printf("файл занят другим процессом");
+				printf("ГґГ Г©Г« Г§Г Г­ГїГІ Г¤Г°ГіГЈГЁГ¬ ГЇГ°Г®Г¶ГҐГ±Г±Г®Г¬");
 				break;
 			}
 			default:
@@ -128,33 +128,34 @@ void CheckPasswordStorage()
 		}
 	}
 	CloseHandle(hFile);
-#else _UNIX
+#else
+#ifdef _UNIX
 	FILE* file = fopen(PASSWORD_FILE, 'rb');
 	if (!file)
 	{
-		printf("Ошибка при открытии файла-хранилища \"%s\"\n", PASSWORD_FILE);
-		printf("Ошибка: ");
+		printf("ГЋГёГЁГЎГЄГ  ГЇГ°ГЁ Г®ГІГЄГ°Г»ГІГЁГЁ ГґГ Г©Г«Г -ГµГ°Г Г­ГЁГ«ГЁГ№Г  \"%s\"\n", PASSWORD_FILE);
+		printf("ГЋГёГЁГЎГЄГ : ");
 		switch (errno)
 		{
 			case ENOENT:
 			{
-				printf("файл не нейден");
+				printf("ГґГ Г©Г« Г­ГҐ Г­ГҐГ©Г¤ГҐГ­");
 				file_exists = false;
 				break;
 			}
 			case EACCES:
 			{
-				printf("нет доступа к файлу");
+				printf("Г­ГҐГІ Г¤Г®Г±ГІГіГЇГ  ГЄ ГґГ Г©Г«Гі");
 				break;
 			}
 			case EBUSY:
 			{
-				printf("файл занят другим процессом");
+				printf("ГґГ Г©Г« Г§Г Г­ГїГІ Г¤Г°ГіГЈГЁГ¬ ГЇГ°Г®Г¶ГҐГ±Г±Г®Г¬");
 				break;
 			}
 			default:
 			{
-				print("%d", strerror(errno));
+				printf("%d", strerror(errno));
 				break;
 			}
 			}
@@ -176,15 +177,15 @@ void CheckPasswordStorage()
 #endif
 	if (!file_exists)
 	{
-		printf("Создание нового файла-хранилища \"%s\"\n", PASSWORD_FILE);
+		printf("Г‘Г®Г§Г¤Г Г­ГЁГҐ Г­Г®ГўГ®ГЈГ® ГґГ Г©Г«Г -ГµГ°Г Г­ГЁГ«ГЁГ№Г  \"%s\"\n", PASSWORD_FILE);
 		int creation_code = TryToCreateFile((const char**)PASSWORD_FILE);
 		if (creation_code)
 		{
-			printf("Ошибка создания файла \"%s\": %d", PASSWORD_FILE, creation_code);
+			printf("ГЋГёГЁГЎГЄГ  Г±Г®Г§Г¤Г Г­ГЁГї ГґГ Г©Г«Г  \"%s\": %d", PASSWORD_FILE, creation_code);
 			exit(creation_code);
 		}
 		else
-			printf("Успешно создан файл для хранения паролей");
+			printf("Г“Г±ГЇГҐГёГ­Г® Г±Г®Г§Г¤Г Г­ ГґГ Г©Г« Г¤Г«Гї ГµГ°Г Г­ГҐГ­ГЁГї ГЇГ Г°Г®Г«ГҐГ©");
 	}
 }
 
