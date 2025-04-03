@@ -32,20 +32,23 @@ int TryToCreateFile(const char** filename) // 0 - óñïåõ. Îñòàëüíîå
 		FILE_ATTRIBUTE_NORMAL,
 		NULL
 	);
-#else _UNIX
+#else 
+#ifdef _UNIX
 	FILE* file = fopen(filename, "w");
 #endif
 
 #ifdef _WIN32
 	if (hFile == INVALID_HANDLE_VALUE)
-#else _UNIX
+#else
+#ifdef _UNIX
 	if (!file)
 #endif
 	{
 		int last_error;
 #ifdef _WIN32	
 		last_error = GetLastError();
-#else _UNIX
+#else
+#ifdef _UNIX
 		last_error = errno;
 #endif
 		return last_error;
@@ -53,7 +56,8 @@ int TryToCreateFile(const char** filename) // 0 - óñïåõ. Îñòàëüíîå
 
 #ifdef _WIN32	
 	CloseHandle(hFile);
-#else _UNIX
+#else
+#ifdef _UNIX
 	fclose(file);
 #endif
 
