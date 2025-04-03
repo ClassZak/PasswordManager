@@ -32,23 +32,20 @@ int TryToCreateFile(const char** filename) // 0 - óñïåõ. Îñòàëüíîå
 		FILE_ATTRIBUTE_NORMAL,
 		NULL
 	);
-#else 
-#ifdef _UNIX
+#elif defined _UNIX
 	FILE* file = fopen(filename, "w");
 #endif
 
 #ifdef _WIN32
 	if (hFile == INVALID_HANDLE_VALUE)
-#else
-#ifdef _UNIX
+#elif defined _UNIX
 	if (!file)
 #endif
 	{
 		int last_error;
 #ifdef _WIN32	
 		last_error = GetLastError();
-#else
-#ifdef _UNIX
+#elif defined _UNIX
 		last_error = errno;
 #endif
 		return last_error;
@@ -56,8 +53,7 @@ int TryToCreateFile(const char** filename) // 0 - óñïåõ. Îñòàëüíîå
 
 #ifdef _WIN32	
 	CloseHandle(hFile);
-#else
-#ifdef _UNIX
+#elif defined _UNIX
 	fclose(file);
 #endif
 
@@ -132,8 +128,7 @@ void CheckPasswordStorage()
 		}
 	}
 	CloseHandle(hFile);
-#else
-#ifdef _UNIX
+#elif defined _UNIX
 	FILE* file = fopen(PASSWORD_FILE, 'rb');
 	if (!file)
 	{
