@@ -41,8 +41,8 @@ int WritePasswordStruct
 /// <param name="password_struct"></param>
 /// <param name="size"></param>
 /// <returns>
-/// 0 - успех
-/// 1 - ошибка
+/// 0 - СѓСЃРїРµС…
+/// 1 - РѕС€РёР±РєР°
 /// </returns>
 int WritePasswordStructs
 (
@@ -59,10 +59,10 @@ struct PasswordStruct* ReadAllPasswordStructs(FILE** file, size_t* size);
 /// <param name="arraySize"></param>
 /// <param name="newElement"></param>
 /// <returns>
-/// 0 - успешное добавление
-/// 1 - ошибка выделения памяти
-/// 2 - выбран неверный указатель на массив
-/// 3 - выбран неверный указатель на длину массива
-/// 4 - выбран неверный указатель на новый элемент
+/// 0 - СѓСЃРїРµС€РЅРѕРµ РґРѕР±Р°РІР»РµРЅРёРµ
+/// 1 - РѕС€РёР±РєР° РІС‹РґРµР»РµРЅРёСЏ РїР°РјСЏС‚Рё
+/// 2 - РІС‹Р±СЂР°РЅ РЅРµРІРµСЂРЅС‹Р№ СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РјР°СЃСЃРёРІ
+/// 3 - РІС‹Р±СЂР°РЅ РЅРµРІРµСЂРЅС‹Р№ СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РґР»РёРЅСѓ РјР°СЃСЃРёРІР°
+/// 4 - РІС‹Р±СЂР°РЅ РЅРµРІРµСЂРЅС‹Р№ СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РЅРѕРІС‹Р№ СЌР»РµРјРµРЅС‚
 /// </returns>
 int AddNewPasswordStruct(struct PasswordStruct** array,size_t* arraySize, struct PasswordStruct* newElement);

@@ -19,7 +19,7 @@
 #define PASSWORD_FILE ".Passwords.bin"
 #endif // !PASSWORD_FILE 
 
-int TryToCreateFile(const char** filename) // 0 - óñïåõ. Îñòàëüíîå - îøèáêà
+int TryToCreateFile(const char** filename) // 0 - успех. Иначе - код ошибки
 {
 #ifdef _WIN32
 	HANDLE hFile = CreateFileA
@@ -79,31 +79,31 @@ void CheckPasswordStorage()
 	if (hFile == INVALID_HANDLE_VALUE)
 	{
 		DWORD error = GetLastError();
-		printf("Îøèáêà ïðè îòêðûòèè ôàéëà-õðàíèëèùà \"%s\"\n", PASSWORD_FILE);
-		printf("Îøèáêà: ");
+		printf("Ошибка при открытии файла-хранилища \"%s\"\n", PASSWORD_FILE);
+		printf("Ошибка: ");
 
 		switch (error)
 		{
 			case ERROR_FILE_NOT_FOUND:
 			{
 				file_exists = false;
-				printf("ôàéë íå íàéäåí\n");
+				printf("файл не найден\n");
 				break;
 			}
 			case ERROR_PATH_NOT_FOUND:
 			{
 				file_exists = false;
-				printf("ïóòü íå íàéäåí\n");
+				printf("путь не найден\n");
 				break;
 			}
 			case ERROR_ACCESS_DENIED:
 			{
-				printf("íåò äîñòóïà\n");
+				printf("нет доступа\n");
 				break;
 			}
 			case ERROR_SHARING_VIOLATION:
 			{
-				printf("ôàéë çàíÿò äðóãèì ïðîöåññîì");
+				printf("файл занят другим процессом");
 				break;
 			}
 			default:
@@ -132,24 +132,24 @@ void CheckPasswordStorage()
 	FILE* file = fopen(PASSWORD_FILE, "rb");
 	if (!file)
 	{
-		printf("Îøèáêà ïðè îòêðûòèè ôàéëà-õðàíèëèùà \"%s\"\n", PASSWORD_FILE);
-		printf("Îøèáêà: ");
+		printf("Ошибка при открытии файла-хранилища \"%s\"\n", PASSWORD_FILE);
+		printf("Ошибка: ");
 		switch (errno)
 		{
 			case ENOENT:
 			{
-				printf("ôàéë íå íåéäåí");
+				printf("файл не найден");
 				file_exists = false;
 				break;
 			}
 			case EACCES:
 			{
-				printf("íåò äîñòóïà ê ôàéëó");
+				printf("нет доступа к файлу");
 				break;
 			}
 			case EBUSY:
 			{
-				printf("ôàéë çàíÿò äðóãèì ïðîöåññîì");
+				printf("файл занят другим процессом");
 				break;
 			}
 			default:
@@ -177,15 +177,15 @@ void CheckPasswordStorage()
 #endif
 	if (!file_exists)
 	{
-		printf("Ñîçäàíèå íîâîãî ôàéëà-õðàíèëèùà \"%s\"\n", PASSWORD_FILE);
+		printf("Создание нового файла-хранилища \"%s\"\n", PASSWORD_FILE);
 		int creation_code = TryToCreateFile((const char**)PASSWORD_FILE);
 		if (creation_code)
 		{
-			printf("Îøèáêà ñîçäàíèÿ ôàéëà \"%s\": %d", PASSWORD_FILE, creation_code);
+			printf("Ошибка создания файла \"%s\": %d", PASSWORD_FILE, creation_code);
 			exit(creation_code);
 		}
 		else
-			printf("Óñïåøíî ñîçäàí ôàéë äëÿ õðàíåíèÿ ïàðîëåé");
+			printf("Успешно создан файл для хранения паролей");
 	}
 }
 
