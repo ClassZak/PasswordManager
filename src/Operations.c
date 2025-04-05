@@ -120,8 +120,19 @@ void Dialog(FILE** file)
 		if (long_command < COMMNAD_FIRST || long_command > COMMNAD_LAST)
 		{
 			print_with_color("Ошибка! Неверная комманда\n",31);
+
+#ifdef _WIN32
 			system("pause");
+#elif defined __unix__
+			printf("Press the \"Enter\" key to continue\n");
+			getchar();
+#endif
+#ifdef _WIN32
 			system("cls");
+#elif defined __unix__
+			printf("\033[2J\033[H");
+#endif
+
 			ShowCommandList();
 			continue;
 		}
@@ -150,7 +161,11 @@ void Dialog(FILE** file)
 			}
 			case COMMAND_CLS:
 			{
+#ifdef _WIN32
 				system("cls");
+#elif defined __unix__
+				printf("\033[2J\033[H");
+#endif
 				break;
 			}
 			case COMMAND_ADD_NEW:

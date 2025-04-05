@@ -202,7 +202,12 @@ int main(int argc, char** argv)
 
 	Dialog(&file);
 	fclose(file);
+#ifdef _WIN32
 	system("pause");
+#elif defined __unix__
+	printf("Press the \"Enter\" key to continue\n");
+	getchar();
+#endif
 
 	return EXIT_SUCCESS;
 }
