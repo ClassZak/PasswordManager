@@ -7,13 +7,13 @@
 #include "PasswordStruct.h"
 
 void print_with_color(const char* format, int color, ...);
-inline void handle_char_input_error()
+static inline void handle_char_input_error()
 {
 	int c;
 	while ((c = getchar()) != '\n' && c != EOF);
 	print_with_color("Ошибка ввода!\n",91);
 }
-inline void print_passwords(struct PasswordStruct* passwords, size_t size)
+static inline void print_passwords(struct PasswordStruct* passwords, size_t size)
 {
 	for(size_t i=0;i!=size;++i)
 		printf
@@ -60,7 +60,10 @@ int AddNewPasswordStructEmplace(struct PasswordStruct*** array, size_t* arraySiz
 void Dialog(FILE** file);
 
 void ShowCommandList();
-inline void CLS(){system("cls"); };
+static inline void CLS()
+{
+	system("cls");
+};
 /// <summary>
 /// 
 /// </summary>
@@ -107,7 +110,7 @@ int DeletePasswordByName(FILE** file, const char* name);
 /// 3 - не найдены пароли для удаления
 /// </returns>
 int DeletePasswordByLogin(FILE** file, const char* login);
-inline struct PasswordStruct* GetAllPasswords(FILE** file, size_t* size)
+static inline struct PasswordStruct* GetAllPasswords(FILE** file, size_t* size)
 {
 	return ReadAllPasswordStructs(file, size);
 }

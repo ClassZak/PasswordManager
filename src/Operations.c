@@ -59,15 +59,15 @@ int AddNewPasswordStructEmplace(struct PasswordStruct*** array, size_t* arraySiz
 
 void ShowCommandList()
 {
-	print_with_color("Выход\t\t\t\t%d\n",					31,	COMMAND_EXIT					);
-	print_with_color("Просмотр списка комманд\t\t%d\n",		36, COMMAND_SHOW_COMMAND_LIST		);
-	print_with_color("Очистить экран\t\t\t%d\n",			36, COMMAND_CLS						);
-	print_with_color("Записать новый пароль\t\t%d\n",		32, COMMAND_ADD_NEW					);
-	print_with_color("Удалить пароль\t\t\t%d\n",			91, COMMAND_DELETE_PASSWORD			);
-	print_with_color("Удалить пароль с названием\t%d\n",	91, COMMAND_DELETE_PASSWORD_BY_NAME	);
-	print_with_color("Удалить пароль с логином\t%d\n",		91, COMMAND_DELETE_PASSWORD_BY_LOGIN);
-	print_with_color("Найти пароль\t\t\t%d\n",				96, COMMAND_FIND_PASSWORDS			);
-	print_with_color("Показать все пароли\t\t%d\n",			96, COMMAND_SHOW_ALL_PASSWORDS		);
+	print_with_color("Р’С‹С…РѕРґ\t\t\t\t%d\n",					31,	COMMAND_EXIT					);
+	print_with_color("РџСЂРѕСЃРјРѕС‚СЂ СЃРїРёСЃРєР° РєРѕРјРјР°РЅРґ\t\t%d\n",		36, COMMAND_SHOW_COMMAND_LIST		);
+	print_with_color("РћС‡РёСЃС‚РёС‚СЊ СЌРєСЂР°РЅ\t\t\t%d\n",			36, COMMAND_CLS						);
+	print_with_color("Р—Р°РїРёСЃР°С‚СЊ РЅРѕРІС‹Р№ РїР°СЂРѕР»СЊ\t\t%d\n",		32, COMMAND_ADD_NEW					);
+	print_with_color("РЈРґР°Р»РёС‚СЊ РїР°СЂРѕР»СЊ\t\t\t%d\n",			91, COMMAND_DELETE_PASSWORD			);
+	print_with_color("РЈРґР°Р»РёС‚СЊ РїР°СЂРѕР»СЊ СЃ РЅР°Р·РІР°РЅРёРµРј\t%d\n",	91, COMMAND_DELETE_PASSWORD_BY_NAME	);
+	print_with_color("РЈРґР°Р»РёС‚СЊ РїР°СЂРѕР»СЊ СЃ Р»РѕРіРёРЅРѕРј\t%d\n",		91, COMMAND_DELETE_PASSWORD_BY_LOGIN);
+	print_with_color("РќР°Р№С‚Рё РїР°СЂРѕР»СЊ\t\t\t%d\n",				96, COMMAND_FIND_PASSWORDS			);
+	print_with_color("РџРѕРєР°Р·Р°С‚СЊ РІСЃРµ РїР°СЂРѕР»Рё\t\t%d\n",			96, COMMAND_SHOW_ALL_PASSWORDS		);
 }
 
 void Dialog(FILE** file)
@@ -105,28 +105,28 @@ void Dialog(FILE** file)
 		errno = 0;
 		long_command = strtol(input, &endptr, 10);
 
-		// Проверка ошибок преобразования
+		// РџСЂРѕРІРµСЂРєР° РѕС€РёР±РѕРє РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ
 		if (*endptr != '\0' || errno == ERANGE)
 		{
-			print_with_color("Ошибка! Введите корректное число\n",31);
+			print_with_color("РћС€РёР±РєР°! Р’РІРµРґРёС‚Рµ РєРѕСЂСЂРµРєС‚РЅРѕРµ С‡РёСЃР»Рѕ\n",31);
 			continue;
 		}
-		// Проверка диапазона int
+		// РџСЂРѕРІРµСЂРєР° РґРёР°РїР°Р·РѕРЅР° int
 		if (long_command < INT_MIN || long_command > INT_MAX)
 		{
-			print_with_color("Ошибка! Число вне допустимого числового диапазона\n",31);
+			print_with_color("РћС€РёР±РєР°! Р§РёСЃР»Рѕ РІРЅРµ РґРѕРїСѓСЃС‚РёРјРѕРіРѕ С‡РёСЃР»РѕРІРѕРіРѕ РґРёР°РїР°Р·РѕРЅР°\n",31);
 			continue;
 		}
 		if (long_command < COMMNAD_FIRST || long_command > COMMNAD_LAST)
 		{
-			print_with_color("Ошибка! Неверная комманда\n",31);
+			print_with_color("РћС€РёР±РєР°! РќРµРІРµСЂРЅР°СЏ РєРѕРјРјР°РЅРґР°\n",31);
 			system("pause");
 			system("cls");
 			ShowCommandList();
 			continue;
 		}
 
-		// Приведение к int после всех проверок
+		// РџСЂРёРІРµРґРµРЅРёРµ Рє int РїРѕСЃР»Рµ РІСЃРµС… РїСЂРѕРІРµСЂРѕРє
 		command = (int)long_command;
 
 
@@ -136,7 +136,7 @@ void Dialog(FILE** file)
 		{
 			case COMMAND_EXIT:
 			{
-				print_with_color("Выход\n",31);
+				print_with_color("Р’С‹С…РѕРґ\n",31);
 				return;
 
 				break;
@@ -156,10 +156,10 @@ void Dialog(FILE** file)
 			case COMMAND_ADD_NEW:
 			{
 				struct PasswordStruct password;
-				printf("Введите значения для нового пароля:\n");
+				printf("Р’РІРµРґРёС‚Рµ Р·РЅР°С‡РµРЅРёСЏ РґР»СЏ РЅРѕРІРѕРіРѕ РїР°СЂРѕР»СЏ:\n");
 
 				int scan_res;
-				printf("Название пароля\t->");
+				printf("РќР°Р·РІР°РЅРёРµ РїР°СЂРѕР»СЏ\t->");
 				scan_res = scanf("%s", password.name);
 				if (scan_res != 1)
 				{
@@ -167,7 +167,7 @@ void Dialog(FILE** file)
 					continue;
 				}
 
-				printf("Описание пароля\t->");
+				printf("РћРїРёСЃР°РЅРёРµ РїР°СЂРѕР»СЏ\t->");
 				scan_res = scanf("%s", password.description);
 				if (scan_res != 1)
 				{
@@ -175,7 +175,7 @@ void Dialog(FILE** file)
 					continue;
 				}
 
-				printf("Логин\t\t->");
+				printf("Р›РѕРіРёРЅ\t\t->");
 				scan_res = scanf("%s", password.login);
 				if (scan_res != 1)
 				{
@@ -183,7 +183,7 @@ void Dialog(FILE** file)
 					continue;
 				}
 
-				printf("Пароль\t\t->");
+				printf("РџР°СЂРѕР»СЊ\t\t->");
 				scan_res = scanf("%s", password.password);
 				if (scan_res != 1)
 				{
@@ -196,22 +196,22 @@ void Dialog(FILE** file)
 				password.password	[sizeof(password.password	) - 1] = '\0';
 				int res=AddNewPassword(file,&password);
 				if(res==EXIT_SUCCESS)
-					print_with_color("Новый пароль успешно добавлен\n", 92);
+					print_with_color("РќРѕРІС‹Р№ РїР°СЂРѕР»СЊ СѓСЃРїРµС€РЅРѕ РґРѕР±Р°РІР»РµРЅ\n", 92);
 				else
 				if(res==EXIT_FAILURE)
-					print_with_color("Не удалось добавить новый пароль\n",91);
+					print_with_color("РќРµ СѓРґР°Р»РѕСЃСЊ РґРѕР±Р°РІРёС‚СЊ РЅРѕРІС‹Р№ РїР°СЂРѕР»СЊ\n",91);
 				else
-					print_with_color("Не удалось добавить новый пароль. Ошибка ввода\n", 91);
+					print_with_color("РќРµ СѓРґР°Р»РѕСЃСЊ РґРѕР±Р°РІРёС‚СЊ РЅРѕРІС‹Р№ РїР°СЂРѕР»СЊ. РћС€РёР±РєР° РІРІРѕРґР°\n", 91);
 
 				break;
 			}
 			case COMMAND_DELETE_PASSWORD:
 			{
 				struct PasswordStruct password;
-				printf("Введите значения пароля для удаления:\n");
+				printf("Р’РІРµРґРёС‚Рµ Р·РЅР°С‡РµРЅРёСЏ РїР°СЂРѕР»СЏ РґР»СЏ СѓРґР°Р»РµРЅРёСЏ:\n");
 
 				int scan_res;
-				printf("Название пароля\t->");
+				printf("РќР°Р·РІР°РЅРёРµ РїР°СЂРѕР»СЏ\t->");
 				scan_res = scanf("%s", password.name);
 				if (scan_res != 1)
 				{
@@ -219,7 +219,7 @@ void Dialog(FILE** file)
 					continue;
 				}
 
-				printf("Описание пароля\t->");
+				printf("РћРїРёСЃР°РЅРёРµ РїР°СЂРѕР»СЏ\t->");
 				scan_res = scanf("%s", password.description);
 				if (scan_res != 1)
 				{
@@ -227,7 +227,7 @@ void Dialog(FILE** file)
 					continue;
 				}
 
-				printf("Логин\t\t->");
+				printf("Р›РѕРіРёРЅ\t\t->");
 				scan_res = scanf("%s", password.login);
 				if (scan_res != 1)
 				{
@@ -235,7 +235,7 @@ void Dialog(FILE** file)
 					continue;
 				}
 
-				printf("Пароль\t\t->");
+				printf("РџР°СЂРѕР»СЊ\t\t->");
 				scan_res = scanf("%s", password.password);
 				if (scan_res != 1)
 				{
@@ -251,21 +251,21 @@ void Dialog(FILE** file)
 				switch (res)
 				{
 					case 0:
-						print_with_color("Записи успешно удалены",96);
+						print_with_color("Р—Р°РїРёСЃРё СѓСЃРїРµС€РЅРѕ СѓРґР°Р»РµРЅС‹",96);
 					break;
 					case 1:
-						print_with_color("Не удалось перезаписать файл после удаления записей", 91);
+						print_with_color("РќРµ СѓРґР°Р»РѕСЃСЊ РїРµСЂРµР·Р°РїРёСЃР°С‚СЊ С„Р°Р№Р» РїРѕСЃР»Рµ СѓРґР°Р»РµРЅРёСЏ Р·Р°РїРёСЃРµР№", 91);
 					break;
 					case 2:
 						if (file_size == 0)
 						{
-							print_with_color("Файл с паролями пуст", 95);
+							print_with_color("Р¤Р°Р№Р» СЃ РїР°СЂРѕР»СЏРјРё РїСѓСЃС‚", 95);
 							break;
 						}
-						print_with_color("Не удалось прочитать файл с записями",91);
+						print_with_color("РќРµ СѓРґР°Р»РѕСЃСЊ РїСЂРѕС‡РёС‚Р°С‚СЊ С„Р°Р№Р» СЃ Р·Р°РїРёСЃСЏРјРё",91);
 					break;
 					case 3:
-						print_with_color("Не найдено записей для удаления", 91);
+						print_with_color("РќРµ РЅР°Р№РґРµРЅРѕ Р·Р°РїРёСЃРµР№ РґР»СЏ СѓРґР°Р»РµРЅРёСЏ", 91);
 					break;
 				}
 				printf("\n");
@@ -275,10 +275,10 @@ void Dialog(FILE** file)
 			case COMMAND_DELETE_PASSWORD_BY_NAME:
 			{
 				char name[PASSWORD_STRUCT_NAME_SIZE];
-				printf("Введите имя пароля для удаления:\n");
+				printf("Р’РІРµРґРёС‚Рµ РёРјСЏ РїР°СЂРѕР»СЏ РґР»СЏ СѓРґР°Р»РµРЅРёСЏ:\n");
 
 				int scan_res;
-				printf("Название пароля\t->");
+				printf("РќР°Р·РІР°РЅРёРµ РїР°СЂРѕР»СЏ\t->");
 				scan_res = scanf("%s", name);
 				if (scan_res != 1)
 				{
@@ -290,21 +290,21 @@ void Dialog(FILE** file)
 				switch (res)
 				{
 				case 0:
-					print_with_color("Записи успешно удалены", 96);
+					print_with_color("Р—Р°РїРёСЃРё СѓСЃРїРµС€РЅРѕ СѓРґР°Р»РµРЅС‹", 96);
 					break;
 				case 1:
-					print_with_color("Не удалось перезаписать файл после удаления записей", 91);
+					print_with_color("РќРµ СѓРґР°Р»РѕСЃСЊ РїРµСЂРµР·Р°РїРёСЃР°С‚СЊ С„Р°Р№Р» РїРѕСЃР»Рµ СѓРґР°Р»РµРЅРёСЏ Р·Р°РїРёСЃРµР№", 91);
 					break;
 				case 2:
 					if (file_size == 0)
 					{
-						print_with_color("Файл с паролями пуст", 95);
+						print_with_color("Р¤Р°Р№Р» СЃ РїР°СЂРѕР»СЏРјРё РїСѓСЃС‚", 95);
 						break;
 					}
-					print_with_color("Не удалось прочитать файл с записями", 91);
+					print_with_color("РќРµ СѓРґР°Р»РѕСЃСЊ РїСЂРѕС‡РёС‚Р°С‚СЊ С„Р°Р№Р» СЃ Р·Р°РїРёСЃСЏРјРё", 91);
 					break;
 				case 3:
-					print_with_color("Не найдено записей для удаления", 91);
+					print_with_color("РќРµ РЅР°Р№РґРµРЅРѕ Р·Р°РїРёСЃРµР№ РґР»СЏ СѓРґР°Р»РµРЅРёСЏ", 91);
 					break;
 				}
 				printf("\n");
@@ -313,10 +313,10 @@ void Dialog(FILE** file)
 			case COMMAND_DELETE_PASSWORD_BY_LOGIN:
 			{
 				char login[PASSWORD_STRUCT_LOGIN_SIZE];
-				printf("Введите логин для удаления записей:\n");
+				printf("Р’РІРµРґРёС‚Рµ Р»РѕРіРёРЅ РґР»СЏ СѓРґР°Р»РµРЅРёСЏ Р·Р°РїРёСЃРµР№:\n");
 
 				int scan_res;
-				printf("Логин\t\t->");
+				printf("Р›РѕРіРёРЅ\t\t->");
 				scan_res = scanf("%s", login);
 				if (scan_res != 1)
 				{
@@ -328,21 +328,21 @@ void Dialog(FILE** file)
 				switch (res)
 				{
 				case 0:
-					print_with_color("Записи успешно удалены", 96);
+					print_with_color("Р—Р°РїРёСЃРё СѓСЃРїРµС€РЅРѕ СѓРґР°Р»РµРЅС‹", 96);
 					break;
 				case 1:
-					print_with_color("Не удалось перезаписать файл после удаления записей", 91);
+					print_with_color("РќРµ СѓРґР°Р»РѕСЃСЊ РїРµСЂРµР·Р°РїРёСЃР°С‚СЊ С„Р°Р№Р» РїРѕСЃР»Рµ СѓРґР°Р»РµРЅРёСЏ Р·Р°РїРёСЃРµР№", 91);
 					break;
 				case 2:
 					if (file_size == 0)
 					{
-						print_with_color("Файл с паролями пуст", 95);
+						print_with_color("Р¤Р°Р№Р» СЃ РїР°СЂРѕР»СЏРјРё РїСѓСЃС‚", 95);
 						break;
 					}
-					print_with_color("Не удалось прочитать файл с записями", 91);
+					print_with_color("РќРµ СѓРґР°Р»РѕСЃСЊ РїСЂРѕС‡РёС‚Р°С‚СЊ С„Р°Р№Р» СЃ Р·Р°РїРёСЃСЏРјРё", 91);
 					break;
 				case 3:
-					print_with_color("Не найдено записей для удаления", 91);
+					print_with_color("РќРµ РЅР°Р№РґРµРЅРѕ Р·Р°РїРёСЃРµР№ РґР»СЏ СѓРґР°Р»РµРЅРёСЏ", 91);
 					break;
 				}
 				printf("\n");
@@ -350,11 +350,11 @@ void Dialog(FILE** file)
 			}
 			case COMMAND_FIND_PASSWORDS:
 			{
-				printf("Выберете атрибуты для поска\n");
+				printf("Р’С‹Р±РµСЂРµС‚Рµ Р°С‚СЂРёР±СѓС‚С‹ РґР»СЏ РїРѕСЃРєР°\n");
 				bool name_attr=false,description_attr=false,login_attr=false,password_attr=false,find_by_content=false;
 				int scan_res;
 				int scan_bool;
-				printf("Включить поиск по названию\t\t(0 чтобы отклонить) ->");
+				printf("Р’РєР»СЋС‡РёС‚СЊ РїРѕРёСЃРє РїРѕ РЅР°Р·РІР°РЅРёСЋ\t\t(0 С‡С‚РѕР±С‹ РѕС‚РєР»РѕРЅРёС‚СЊ) ->");
 				scan_res = scanf("%d", &scan_bool);
 				if (scan_res != 1)
 				{
@@ -363,7 +363,7 @@ void Dialog(FILE** file)
 				}
 				name_attr= scan_bool;
 
-				printf("Включить поиск по описанию\t\t(0 чтобы отклонить) ->");
+				printf("Р’РєР»СЋС‡РёС‚СЊ РїРѕРёСЃРє РїРѕ РѕРїРёСЃР°РЅРёСЋ\t\t(0 С‡С‚РѕР±С‹ РѕС‚РєР»РѕРЅРёС‚СЊ) ->");
 				scan_res = scanf("%d", &scan_bool);
 				if (scan_res != 1)
 				{
@@ -372,7 +372,7 @@ void Dialog(FILE** file)
 				}
 				description_attr = scan_bool;
 
-				printf("Включить поиск по логину\t\t(0 чтобы отклонить) ->");
+				printf("Р’РєР»СЋС‡РёС‚СЊ РїРѕРёСЃРє РїРѕ Р»РѕРіРёРЅСѓ\t\t(0 С‡С‚РѕР±С‹ РѕС‚РєР»РѕРЅРёС‚СЊ) ->");
 				scan_res = scanf("%d", &scan_bool);
 				if (scan_res != 1)
 				{
@@ -381,7 +381,7 @@ void Dialog(FILE** file)
 				}
 				login_attr = scan_bool;
 
-				printf("Включить поиск по паролю\t\t(0 чтобы отклонить) ->");
+				printf("Р’РєР»СЋС‡РёС‚СЊ РїРѕРёСЃРє РїРѕ РїР°СЂРѕР»СЋ\t\t(0 С‡С‚РѕР±С‹ РѕС‚РєР»РѕРЅРёС‚СЊ) ->");
 				scan_res = scanf("%d", &scan_bool);
 				if (scan_res != 1)
 				{
@@ -390,8 +390,8 @@ void Dialog(FILE** file)
 				}
 				password_attr = scan_bool;
 
-				printf("Выберете тип поиска:\n");
-				print_with_color("1 - Поиск по точным совпадениям. 0 - Поиск по содержимому\n",90);
+				printf("Р’С‹Р±РµСЂРµС‚Рµ С‚РёРї РїРѕРёСЃРєР°:\n");
+				print_with_color("1 - РџРѕРёСЃРє РїРѕ С‚РѕС‡РЅС‹Рј СЃРѕРІРїР°РґРµРЅРёСЏРј. 0 - РџРѕРёСЃРє РїРѕ СЃРѕРґРµСЂР¶РёРјРѕРјСѓ\n",90);
 				printf("->");
 				scan_res = scanf("%d", &scan_bool);
 				find_by_content = !scan_bool;
@@ -403,17 +403,17 @@ void Dialog(FILE** file)
 
 				if (!name_attr && !description_attr && !login_attr && !password_attr)
 				{
-					print_with_color("Нет никаких критериев поиска\n",91);
+					print_with_color("РќРµС‚ РЅРёРєР°РєРёС… РєСЂРёС‚РµСЂРёРµРІ РїРѕРёСЃРєР°\n",91);
 					continue;
 				}
 
 				size_t passwords_quantity;
 				struct PasswordStruct password;
-				printf("Введите значения пароля для поиска:\n");
+				printf("Р’РІРµРґРёС‚Рµ Р·РЅР°С‡РµРЅРёСЏ РїР°СЂРѕР»СЏ РґР»СЏ РїРѕРёСЃРєР°:\n");
 
 				if (name_attr)
 				{
-					printf("Название пароля\t->");
+					printf("РќР°Р·РІР°РЅРёРµ РїР°СЂРѕР»СЏ\t->");
 					scan_res = scanf("%s", password.name);
 					if (scan_res != 1)
 					{
@@ -424,7 +424,7 @@ void Dialog(FILE** file)
 
 				if (description_attr)
 				{
-					printf("Описание пароля\t->");
+					printf("РћРїРёСЃР°РЅРёРµ РїР°СЂРѕР»СЏ\t->");
 					scan_res = scanf("%s", password.description);
 					if (scan_res != 1)
 					{
@@ -435,7 +435,7 @@ void Dialog(FILE** file)
 
 				if (login_attr)
 				{
-					printf("Логин\t\t->");
+					printf("Р›РѕРіРёРЅ\t\t->");
 					scan_res = scanf("%s", password.login);
 					if (scan_res != 1)
 					{
@@ -446,7 +446,7 @@ void Dialog(FILE** file)
 
 				if (password_attr)
 				{
-					printf("Пароль\t\t->");
+					printf("РџР°СЂРѕР»СЊ\t\t->");
 					scan_res = scanf("%s", password.password);
 					if (scan_res != 1)
 					{
@@ -481,23 +481,23 @@ void Dialog(FILE** file)
 				{
 					case EXIT_SUCCESS:
 					{
-						print_with_color("Найденные записи: \n",96);
+						print_with_color("РќР°Р№РґРµРЅРЅС‹Рµ Р·Р°РїРёСЃРё: \n",96);
 						print_passwords(founded_passwords, founded_passwords_quantity);
 						break;
 					}
 					case EXIT_FAILURE:
 					{
-						print_with_color("Не удалось прочитать данные из файла: \n",96);
+						print_with_color("РќРµ СѓРґР°Р»РѕСЃСЊ РїСЂРѕС‡РёС‚Р°С‚СЊ РґР°РЅРЅС‹Рµ РёР· С„Р°Р№Р»Р°: \n",96);
 						break;
 					}
 					case 2:
 					{
-						print_with_color("Файл с паролями пуст\n", 95);
+						print_with_color("Р¤Р°Р№Р» СЃ РїР°СЂРѕР»СЏРјРё РїСѓСЃС‚\n", 95);
 						break;
 					}
 					case 3:
 					{
-						print_with_color("Записей не найдено\n", 93);
+						print_with_color("Р—Р°РїРёСЃРµР№ РЅРµ РЅР°Р№РґРµРЅРѕ\n", 93);
 						break;
 					}
 				default:
@@ -515,7 +515,7 @@ void Dialog(FILE** file)
 				{
 					if (file_size == 0)
 					{
-						print_with_color("Файл с паролями пуст\n",95);
+						print_with_color("Р¤Р°Р№Р» СЃ РїР°СЂРѕР»СЏРјРё РїСѓСЃС‚\n",95);
 						continue;
 					}
 				}
@@ -524,7 +524,7 @@ void Dialog(FILE** file)
 
 				if (passwords == NULL)
 				{
-					print_with_color("Ошибка чтения паролей\n",91);
+					print_with_color("РћС€РёР±РєР° С‡С‚РµРЅРёСЏ РїР°СЂРѕР»РµР№\n",91);
 					continue;
 				}
 
