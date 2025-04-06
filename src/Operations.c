@@ -166,6 +166,8 @@ void Dialog(FILE** file)
 #elif defined __unix__
 				printf("\033[2J\033[H");
 #endif
+				ShowCommandList();
+
 				break;
 			}
 			case COMMAND_ADD_NEW:

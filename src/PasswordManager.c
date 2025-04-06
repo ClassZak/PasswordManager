@@ -204,9 +204,10 @@ void EnableVTMode()
 
 int main(int argc, char** argv)
 {
-	setlocale(LC_ALL, "Russian");
-
+	setlocale(LC_ALL, "");
 #ifdef _WIN32
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
 	EnableVTMode();
 #endif // _WIN32
 
