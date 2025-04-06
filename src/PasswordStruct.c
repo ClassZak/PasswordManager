@@ -1,4 +1,4 @@
-#include "PasswordStruct.h"
+﻿#include "PasswordStruct.h"
 
 long getFileSize(FILE** file)
 {

@@ -1,4 +1,4 @@
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
 #include <stdbool.h>
@@ -190,11 +190,26 @@ void CheckPasswordStorage()
 }
 
 
+#ifdef _WIN32
+void EnableVTMode()
+{
+	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	DWORD dwMode = 0;
+	GetConsoleMode(hOut, &dwMode);
+	dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+	SetConsoleMode(hOut, dwMode);
+}
+#endif // _WIN32
 
 
 int main(int argc, char** argv)
 {
 	setlocale(LC_ALL, "Russian");
+
+#ifdef _WIN32
+	EnableVTMode();
+#endif // _WIN32
+
 
 	CheckPasswordStorage();
 

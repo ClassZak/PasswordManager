@@ -1,4 +1,4 @@
-#include "Operations.h"
+﻿#include "Operations.h"
 
 void print_with_color(const char* format, int color, ...)
 {

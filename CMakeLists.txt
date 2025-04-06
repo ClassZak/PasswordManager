@@ -41,7 +41,7 @@ message(STATUS "Тип сборки: ${CMAKE_BUILD_TYPE}")
 # Установка флагов отключения оптимизации для всех конфигураций
 if(MSVC)
     # Для MSVC используем /Od и отключаем другие оптимизации
-    target_compile_options(PasswordManager PRIVATE
+    target_compile_options(PasswordManager PRIVATE /utf8
         $<$<CONFIG:Debug>:/Od>
         $<$<CONFIG:Release>:/Od>
         $<$<CONFIG:RelWithDebInfo>:/Od>
