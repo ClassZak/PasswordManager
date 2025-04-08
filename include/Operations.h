@@ -13,18 +13,83 @@ static inline void handle_char_input_error()
 	while ((c = getchar()) != '\n' && c != EOF);
 	print_with_color("Ошибка ввода!\n",91);
 }
+static inline void scan_string(char* buffer,size_t size)
+{
+	if(!size)
+		return;
+
+	fgets(buffer,size,stdin);
+	size_t str_len=strlen(buffer);
+	(buffer)[size-1]='\0';
+
+	if(str_len)
+		buffer[str_len-1]='\0';
+}
 static inline void print_passwords(struct PasswordStruct* passwords, size_t size)
 {
-	for(size_t i=0;i!=size;++i)
-		printf
+	char last_char='\0';
+	size_t string_length=0;
+
+	for (size_t i = 0; i != size; ++i)
+	{
+		printf("Название:\t");
+		string_length=strlen(passwords[i].name);
+		if(!string_length)
+			printf("\n");
+		if
 		(
-			"Название:\t%s\n\
-Описание:\t%s\n\
-Логин:\t\t%s\n\
-Пароль:\t\t%s\n\
-\n",
-			passwords[i].name, passwords[i].description, passwords[i].login, passwords[i].password
-		);
+			passwords[i].name[string_length - 1] == ' ' ||
+			passwords[i].name[string_length - 1] == '\t' || 
+			passwords[i].name[string_length - 1] == '\n'
+		)
+			printf("\"%s\"\n",passwords[i].name);
+		else
+			printf("%s\n", passwords[i].name);
+			
+		printf("Описание:\t");
+		string_length=strlen(passwords[i].description);
+		if(!string_length)
+			printf("\n");
+		if
+		(
+			passwords[i].description[string_length - 1] == ' ' ||
+			passwords[i].description[string_length - 1] == '\t' || 
+			passwords[i].description[string_length - 1] == '\n'
+		)
+			printf("\"%s\"\n",passwords[i].description);
+		else
+			printf("%s\n", passwords[i].description);
+
+		printf("Логин:\t\t");
+		string_length=strlen(passwords[i].login);
+		if(!string_length)
+			printf("\n");
+		if
+		(
+			passwords[i].login[string_length - 1] == ' ' ||
+			passwords[i].login[string_length - 1] == '\t' || 
+			passwords[i].login[string_length - 1] == '\n'
+		)
+			printf("\"%s\"\n",passwords[i].login);
+		else
+			printf("%s\n", passwords[i].login);
+			
+		printf("Пароль:\t\t");
+		string_length=strlen(passwords[i].password);
+		if(!string_length)
+			printf("\n");
+		if
+		(
+			passwords[i].password[string_length - 1] == ' ' ||
+			passwords[i].password[string_length - 1] == '\t' || 
+			passwords[i].password[string_length - 1] == '\n'
+		)
+			printf("\"%s\"\n",passwords[i].password);
+		else
+			printf("%s\n", passwords[i].password);
+
+		printf("\n");
+	}
 }
 
 

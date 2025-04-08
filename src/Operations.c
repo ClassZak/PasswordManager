@@ -174,43 +174,16 @@ void Dialog(FILE** file)
 			{
 				struct PasswordStruct password;
 				printf("Введите значения для нового пароля:\n");
-
-				int scan_res;
+				
 				printf("Название пароля\t->");
-				scan_res = scanf("%s", password.name);
-				if (scan_res != 1)
-				{
-					handle_char_input_error();
-					continue;
-				}
-
+				scan_string(password.name, PASSWORD_STRUCT_NAME_SIZE);
 				printf("Описание пароля\t->");
-				scan_res = scanf("%s", password.description);
-				if (scan_res != 1)
-				{
-					handle_char_input_error();
-					continue;
-				}
-
+				scan_string(password.description, PASSWORD_STRUCT_DESCRIPTION_SIZE);
 				printf("Логин\t\t->");
-				scan_res = scanf("%s", password.login);
-				if (scan_res != 1)
-				{
-					handle_char_input_error();
-					continue;
-				}
-
+				scan_string(password.login, PASSWORD_STRUCT_LOGIN_SIZE);
 				printf("Пароль\t\t->");
-				scan_res = scanf("%s", password.password);
-				if (scan_res != 1)
-				{
-					handle_char_input_error();
-					continue;
-				}
-				password.name		[sizeof(password.name		) - 1] = '\0';
-				password.description[sizeof(password.description) - 1] = '\0';
-				password.login		[sizeof(password.login		) - 1] = '\0';
-				password.password	[sizeof(password.password	) - 1] = '\0';
+				scan_string(password.password, PASSWORD_STRUCT_PASSWORD_SIZE);
+
 				int res=AddNewPassword(file,&password);
 				if(res==EXIT_SUCCESS)
 					print_with_color("Новый пароль успешно добавлен\n", 92);
@@ -227,42 +200,15 @@ void Dialog(FILE** file)
 				struct PasswordStruct password;
 				printf("Введите значения пароля для удаления:\n");
 
-				int scan_res;
 				printf("Название пароля\t->");
-				scan_res = scanf("%s", password.name);
-				if (scan_res != 1)
-				{
-					handle_char_input_error();
-					continue;
-				}
-
+				scan_string(password.name, PASSWORD_STRUCT_NAME_SIZE);
 				printf("Описание пароля\t->");
-				scan_res = scanf("%s", password.description);
-				if (scan_res != 1)
-				{
-					handle_char_input_error();
-					continue;
-				}
-
+				scan_string(password.description, PASSWORD_STRUCT_DESCRIPTION_SIZE);
 				printf("Логин\t\t->");
-				scan_res = scanf("%s", password.login);
-				if (scan_res != 1)
-				{
-					handle_char_input_error();
-					continue;
-				}
-
+				scan_string(password.login, PASSWORD_STRUCT_LOGIN_SIZE);
 				printf("Пароль\t\t->");
-				scan_res = scanf("%s", password.password);
-				if (scan_res != 1)
-				{
-					handle_char_input_error();
-					continue;
-				}
-				password.name		[sizeof(password.name		) - 1] = '\0';
-				password.description[sizeof(password.description) - 1] = '\0';
-				password.login		[sizeof(password.login		) - 1] = '\0';
-				password.password	[sizeof(password.password	) - 1] = '\0';
+				scan_string(password.password, PASSWORD_STRUCT_PASSWORD_SIZE);
+
 				int res = DeletePassword(file, &password);
 
 				switch (res)
@@ -292,16 +238,10 @@ void Dialog(FILE** file)
 			case COMMAND_DELETE_PASSWORD_BY_NAME:
 			{
 				char name[PASSWORD_STRUCT_NAME_SIZE];
-				printf("Введите имя пароля для удаления:\n");
 
-				int scan_res;
+				printf("Введите имя пароля для удаления:\n");
 				printf("Название пароля\t->");
-				scan_res = scanf("%s", name);
-				if (scan_res != 1)
-				{
-					handle_char_input_error();
-					continue;
-				}
+				scan_string(name,PASSWORD_STRUCT_NAME_SIZE);
 
 				int res=DeletePasswordByName(file,name);
 				switch (res)
@@ -330,16 +270,9 @@ void Dialog(FILE** file)
 			case COMMAND_DELETE_PASSWORD_BY_LOGIN:
 			{
 				char login[PASSWORD_STRUCT_LOGIN_SIZE];
-				printf("Введите логин для удаления записей:\n");
 
-				int scan_res;
-				printf("Логин\t\t->");
-				scan_res = scanf("%s", login);
-				if (scan_res != 1)
-				{
-					handle_char_input_error();
-					continue;
-				}
+				printf("Введите логин для удаления записей:\n");
+				scan_string(login, PASSWORD_STRUCT_LOGIN_SIZE);
 
 				int res = DeletePasswordByLogin(file, login);
 				switch (res)
@@ -431,45 +364,25 @@ void Dialog(FILE** file)
 				if (name_attr)
 				{
 					printf("Название пароля\t->");
-					scan_res = scanf("%s", password.name);
-					if (scan_res != 1)
-					{
-						handle_char_input_error();
-						continue;
-					}
+					scan_string(password.name, PASSWORD_STRUCT_NAME_SIZE);
 				}
 
 				if (description_attr)
 				{
 					printf("Описание пароля\t->");
-					scan_res = scanf("%s", password.description);
-					if (scan_res != 1)
-					{
-						handle_char_input_error();
-						continue;
-					}
+					scan_string(password.description, PASSWORD_STRUCT_DESCRIPTION_SIZE);
 				}
 
 				if (login_attr)
 				{
 					printf("Логин\t\t->");
-					scan_res = scanf("%s", password.login);
-					if (scan_res != 1)
-					{
-						handle_char_input_error();
-						continue;
-					}
+					scan_string(password.login, PASSWORD_STRUCT_LOGIN_SIZE);
 				}
 
 				if (password_attr)
 				{
 					printf("Пароль\t\t->");
-					scan_res = scanf("%s", password.password);
-					if (scan_res != 1)
-					{
-						handle_char_input_error();
-						continue;
-					}
+					scan_string(password.password, PASSWORD_STRUCT_PASSWORD_SIZE);
 				}
 				password.name		[sizeof(password.name		) - 1] = '\0';
 				password.description[sizeof(password.description) - 1] = '\0';
@@ -618,7 +531,7 @@ int DeletePassword(FILE** file, struct PasswordStruct* password_struct)
 
 	*file = freopen(PASSWORD_FILE, "r+", *file);
 
-	if(res)
+	if(res && passwords_for_rewrite_quantity)
 		return EXIT_FAILURE;
 
 	if(passwords_for_rewrite)
@@ -673,7 +586,7 @@ int DeletePasswordByName(FILE** file, const char* name)
 
 	*file = freopen(PASSWORD_FILE, "r+", *file);
 
-	if (res)
+	if (res && passwords_for_rewrite_quantity)
 		return EXIT_FAILURE;
 
 	if (passwords_for_rewrite)
@@ -728,7 +641,7 @@ int DeletePasswordByLogin(FILE** file, const char* login)
 
 	*file = freopen(PASSWORD_FILE, "r+", *file);
 
-	if (res)
+	if (res && passwords_for_rewrite_quantity)
 		return EXIT_FAILURE;
 
 	if (passwords_for_rewrite)

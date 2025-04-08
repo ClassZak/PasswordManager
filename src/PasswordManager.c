@@ -181,11 +181,11 @@ void CheckPasswordStorage()
 		int creation_code = TryToCreateFile((const char**)PASSWORD_FILE);
 		if (creation_code)
 		{
-			printf("Ошибка создания файла \"%s\": %d", PASSWORD_FILE, creation_code);
+			printf("Ошибка создания файла \"%s\": %d\n", PASSWORD_FILE, creation_code);
 			exit(creation_code);
 		}
 		else
-			printf("Успешно создан файл для хранения паролей");
+			printf("Успешно создан файл для хранения паролей\n");
 	}
 }
 
