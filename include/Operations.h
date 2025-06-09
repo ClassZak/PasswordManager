@@ -25,6 +25,11 @@ static inline void scan_string(char* buffer,size_t size)
 	if(str_len)
 		buffer[str_len-1]='\0';
 }
+static inline void clear_scan_buffer()
+{
+	int c;
+	while(c = getchar() != '\n' && c != EOF);
+}
 static inline void print_passwords(struct PasswordStruct* passwords, size_t size)
 {
 	char last_char='\0';

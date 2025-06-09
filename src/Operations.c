@@ -120,7 +120,7 @@ void Dialog(FILE** file)
 		}
 		if (long_command < COMMNAD_FIRST || long_command > COMMNAD_LAST)
 		{
-			print_with_color("Ошибка! Неверная комманда\n",31);
+			print_with_color("Ошибка! Неверная команда\n",31);
 
 #ifdef _WIN32
 			system("pause");
@@ -301,7 +301,7 @@ void Dialog(FILE** file)
 			}
 			case COMMAND_FIND_PASSWORDS:
 			{
-				printf("Выберете атрибуты для поска\n");
+				printf("Выберете атрибуты для поиска\n");
 				bool name_attr=false,description_attr=false,login_attr=false,password_attr=false,find_by_content=false;
 				int scan_res;
 				int scan_bool;
@@ -345,6 +345,7 @@ void Dialog(FILE** file)
 				print_with_color("1 - Поиск по точным совпадениям. 0 - Поиск по содержимому\n",90);
 				printf("->");
 				scan_res = scanf("%d", &scan_bool);
+				clear_scan_buffer();
 				find_by_content = !scan_bool;
 				if (scan_res != 1)
 				{
