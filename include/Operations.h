@@ -28,7 +28,12 @@ static inline void scan_string(char* buffer,size_t size)
 static inline void clear_scan_buffer()
 {
 	int c;
-	while(c = getchar() != '\n' && c != EOF);
+	while(1)
+	{
+		c = getchar();
+		if (c == '\n' || c == EOF)
+		break;
+	}
 }
 static inline void print_passwords(struct PasswordStruct* passwords, size_t size)
 {
