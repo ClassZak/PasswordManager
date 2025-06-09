@@ -19,6 +19,7 @@ int AddNewPasswordStructEmplace(struct PasswordStruct*** array, size_t* arraySiz
 	if (!arraySize)
 		return 3;
 
+
 	if (!newElement)
 		return 4;
 	
@@ -37,7 +38,7 @@ int AddNewPasswordStructEmplace(struct PasswordStruct*** array, size_t* arraySiz
 		struct PasswordStruct** old_array=malloc(sizeof(struct PasswordStruct*)*(*arraySize));
 		if (old_array != NULL)
 			for (size_t i = 0; i != *arraySize; i++)
-				old_array[i]=*array[i];
+				old_array[i]=(*array)[i];
 
 		free(*array);
 		*array=malloc(sizeof(struct PasswordStruct*)*((*arraySize)+1));
@@ -45,7 +46,7 @@ int AddNewPasswordStructEmplace(struct PasswordStruct*** array, size_t* arraySiz
 		if (old_array && *array)
 		{
 			for (size_t i = 0; i != *arraySize; ++i)
-				*array[i]=old_array[i];
+				(*array)[i]=old_array[i];
 
 			(*array)[(*arraySize)++]=newElement;
 
@@ -60,7 +61,7 @@ int AddNewPasswordStructEmplace(struct PasswordStruct*** array, size_t* arraySiz
 void ShowCommandList()
 {
 	print_with_color("Выход\t\t\t\t%d\n",					31,	COMMAND_EXIT					);
-	print_with_color("Просмотр списка комманд\t\t%d\n",		36, COMMAND_SHOW_COMMAND_LIST		);
+	print_with_color("Просмотр списка команд\t\t%d\n",		36, COMMAND_SHOW_COMMAND_LIST		);
 	print_with_color("Очистить экран\t\t\t%d\n",			36, COMMAND_CLS						);
 	print_with_color("Записать новый пароль\t\t%d\n",		32, COMMAND_ADD_NEW					);
 	print_with_color("Удалить пароль\t\t\t%d\n",			91, COMMAND_DELETE_PASSWORD			);
@@ -186,7 +187,7 @@ void Dialog(FILE** file)
 
 				int res=AddNewPassword(file,&password);
 				if(res==EXIT_SUCCESS)
-					print_with_color("Новый пароль успешно добавлен\n", 92);
+					print_with_color("Новый пароль успешно добавлен\n", 32);
 				else
 				if(res==EXIT_FAILURE)
 					print_with_color("Не удалось добавить новый пароль\n",91);

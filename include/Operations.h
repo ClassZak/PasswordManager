@@ -51,12 +51,16 @@ static inline void print_passwords(struct PasswordStruct* passwords, size_t size
 		if(!string_length)
 			printf("\n");
 		if
-		(
-			passwords[i].description[string_length - 1] == ' ' ||
-			passwords[i].description[string_length - 1] == '\t' || 
-			passwords[i].description[string_length - 1] == '\n'
-		)
+			(
+				passwords[i].description[string_length - 1] == ' ' ||
+				passwords[i].description[string_length - 1] == '\t' ||
+				passwords[i].description[string_length - 1] == '\n'
+				)
+		{
+			print_with_color("\"", 36);
 			printf("\"%s\"\n",passwords[i].description);
+			print_with_color("\"", 36);
+		}
 		else
 			printf("%s\n", passwords[i].description);
 
@@ -65,12 +69,19 @@ static inline void print_passwords(struct PasswordStruct* passwords, size_t size
 		if(!string_length)
 			printf("\n");
 		if
-		(
-			passwords[i].login[string_length - 1] == ' ' ||
-			passwords[i].login[string_length - 1] == '\t' || 
-			passwords[i].login[string_length - 1] == '\n'
-		)
-			printf("\"%s\"\n",passwords[i].login);
+			(
+				string_length &&
+				(
+					passwords[i].login[string_length - 1] == ' ' ||
+					passwords[i].login[string_length - 1] == '\t' ||
+					passwords[i].login[string_length - 1] == '\n'
+					)
+				)
+		{
+			print_with_color("\"", 36);
+			printf("%s\n",passwords[i].login);
+			print_with_color("\"", 36);
+		}
 		else
 			printf("%s\n", passwords[i].login);
 			
@@ -84,7 +95,11 @@ static inline void print_passwords(struct PasswordStruct* passwords, size_t size
 			passwords[i].password[string_length - 1] == '\t' || 
 			passwords[i].password[string_length - 1] == '\n'
 		)
-			printf("\"%s\"\n",passwords[i].password);
+		{
+			print_with_color("\"", 36);
+			printf("%s\n", passwords[i].password);
+			print_with_color("\"", 36);
+		}
 		else
 			printf("%s\n", passwords[i].password);
 
@@ -190,7 +205,7 @@ static inline struct PasswordStruct* GetAllPasswords(FILE** file, size_t* size)
 /// </summary>
 /// <param name="params">
 /// Список параметров поиска
-/// Каждый параметр проверяется отдельно в соответсвии с тем, активен нужный флвг или нет.
+/// Каждый параметр проверяется отдельно в соответствии с тем, активен нужный флаг или нет.
 /// Например, можно выполнить поиск только по имени и логину.
 /// Режим 5 позволяет вывести все записи, в выбранных параметрах которых будут
 /// содержаться в строках соответствующие значения для поиска.
