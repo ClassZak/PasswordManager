@@ -33,7 +33,7 @@ int TryToCreateFile(const char** filename) // 0 - успех. Иначе - ко�
 		NULL
 	);
 #elif defined __unix__
-	FILE* file = fopen(filename, "w");
+	FILE* file = fopen((const char*)filename, "w");
 #endif
 
 #ifdef _WIN32
