@@ -342,7 +342,7 @@ void Dialog(FILE** file)
 				password_attr = scan_bool;
 
 				printf("Выберете тип поиска:\n");
-				print_with_color("1 - Поиск по точным совпадениям. 0 - Поиск по содержимому\n",90);
+				print_with_color("0 - Поиск по точным совпадениям. 1 - Поиск по содержимому\n",90);
 				printf("->");
 				scan_res = scanf("%d", &scan_bool);
 				clear_scan_buffer();

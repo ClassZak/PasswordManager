@@ -27,7 +27,7 @@ static inline void scan_string(char* buffer,size_t size)
 }
 static inline void clear_scan_buffer()
 {
-	int c;
+	int c=1;
 	while(1)
 	{
 		c = getchar();
