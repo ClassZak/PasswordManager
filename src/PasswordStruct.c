@@ -1,14 +1,21 @@
 ﻿#include "PasswordStruct.h"
 
-long getFileSize(FILE** file)
+void FreePasswordStruct(struct PasswordStruct* password_struct)
 {
-	long size, prev_pos = ftell(*file);
-
-	fseek(*file, 0, SEEK_END);
-	size = ftell(*file);
-	fseek(*file, prev_pos,SEEK_SET);
-
-	return size;
+	
+	if(password_struct->name)
+		free(password_struct->name);
+	if(password_struct->description)
+		free(password_struct->description);
+	if(password_struct->login)
+		free(password_struct->login);
+	if(password_struct->password)
+		free(password_struct->password);
+}
+void FreePasswordStructs(struct PasswordStruct* password_structs, size_t count)
+{
+	for(size_t i = 0; i != count; ++i)
+		FreePasswordStruct(password_structs + i);
 }
 
 

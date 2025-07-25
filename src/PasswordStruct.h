@@ -9,20 +9,22 @@
 
 struct PasswordStruct
 {
-	char description[200];
+	unsigned long name_size;
+	char* name;
 
-	char login[100];
-	char password[100];
+	unsigned long description_size;
+	char* description;
 
-	char name[50];
+	unsigned long login_size;
+	char* login;
+
+	unsigned long password_size;
+	char* password;
 };
+void FreePasswordStruct(struct PasswordStruct* password_struct);
+void FreePasswordStructs(struct PasswordStruct* password_structs, size_t count);
 
-#define PASSWORD_STRUCT_NAME_SIZE			50
-#define PASSWORD_STRUCT_DESCRIPTION_SIZE	200
-#define PASSWORD_STRUCT_LOGIN_SIZE			100
-#define PASSWORD_STRUCT_PASSWORD_SIZE		100
 
-long getFileSize(FILE** file);
 
 int ReadPasswordStruct
 (
