@@ -154,7 +154,7 @@ void CheckPasswordStorage()
 			}
 			default:
 			{
-				printf("%d", strerror(errno));
+				printf("%s", strerror(errno));
 				break;
 			}
 			}

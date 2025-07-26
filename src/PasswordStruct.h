@@ -25,7 +25,7 @@ void FreePasswordStruct(struct PasswordStruct* password_struct);
 void FreePasswordStructs(struct PasswordStruct* password_structs, size_t count);
 
 
-
+ 
 int ReadPasswordStruct
 (
 	FILE** file,

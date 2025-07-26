@@ -1,17 +1,5 @@
 ﻿#include "Operations.h"
 
-void print_with_color(const char* format, int color, ...)
-{
-	printf("\x1b[%dm", color);
-
-	va_list args;
-	va_start(args, color);
-	vprintf(format, args);
-	va_end(args);
-
-	printf("\x1b[0m");
-}
-
 int AddNewPasswordStructEmplace(struct PasswordStruct*** array, size_t* arraySize, struct PasswordStruct* newElement)
 {
 	if (!array)
@@ -60,13 +48,13 @@ int AddNewPasswordStructEmplace(struct PasswordStruct*** array, size_t* arraySiz
 
 void ShowCommandList()
 {
-	print_with_color("Выход\t\t\t\t%d\n",					31,	COMMAND_EXIT					);
+	print_with_color("Выход\t\t\t\t%d\n",					31, COMMAND_EXIT						);
 	print_with_color("Просмотр списка команд\t\t%d\n",		36, COMMAND_SHOW_COMMAND_LIST		);
 	print_with_color("Очистить экран\t\t\t%d\n",			36, COMMAND_CLS						);
 	print_with_color("Записать новый пароль\t\t%d\n",		32, COMMAND_ADD_NEW					);
 	print_with_color("Удалить пароль\t\t\t%d\n",			91, COMMAND_DELETE_PASSWORD			);
 	print_with_color("Удалить пароль с названием\t%d\n",	91, COMMAND_DELETE_PASSWORD_BY_NAME	);
-	print_with_color("Удалить пароль с логином\t%d\n",		91, COMMAND_DELETE_PASSWORD_BY_LOGIN);
+	print_with_color("Удалить пароль с логином\t%d\n",		91, COMMAND_DELETE_PASSWORD_BY_LOGIN	);
 	print_with_color("Найти пароль\t\t\t%d\n",				96, COMMAND_FIND_PASSWORDS			);
 	print_with_color("Показать все пароли\t\t%d\n",			96, COMMAND_SHOW_ALL_PASSWORDS		);
 }
@@ -84,28 +72,30 @@ void Dialog(FILE** file)
 	{
 		printf(">");
 		fflush(stdout);
-
+		
 		if (!fgets(input, sizeof(input), stdin))
 		{
 			if (feof(stdin))
 				return;
 		}
-
+		
 		size_t len = strlen(input);
 		if (len > 0 && input[len - 1] == '\n')
 		{
 			input[len - 1] = '\0';
 			len--;
 		}
-
+		
 		if (len == 0)
 			continue;
-
+		
 		
 		char* endptr;
 		errno = 0;
+		print_with_color("input:\"%s\"\n", 96, input);
 		long_command = strtol(input, &endptr, 10);
-
+		print_with_color("endptr:\"%s\"\nerrno:%d\n", 96, endptr);
+		
 		// Проверка ошибок преобразования
 		if (*endptr != '\0' || errno == ERANGE)
 		{
@@ -141,8 +131,7 @@ void Dialog(FILE** file)
 		// Приведение к int после всех проверок
 		command = (int)long_command;
 
-
-		file_size=getFileSize(file);
+		file_size=get_file_size(file);
 
 		switch (command)
 		{
@@ -177,13 +166,13 @@ void Dialog(FILE** file)
 				printf("Введите значения для нового пароля:\n");
 				
 				printf("Название пароля\t->");
-				scan_string(password.name, PASSWORD_STRUCT_NAME_SIZE);
+				scan_long_string(password.name);
 				printf("Описание пароля\t->");
-				scan_string(password.description, PASSWORD_STRUCT_DESCRIPTION_SIZE);
+				scan_long_string(password.description);
 				printf("Логин\t\t->");
-				scan_string(password.login, PASSWORD_STRUCT_LOGIN_SIZE);
+				scan_long_string(password.login);
 				printf("Пароль\t\t->");
-				scan_string(password.password, PASSWORD_STRUCT_PASSWORD_SIZE);
+				scan_long_string(password.password);
 
 				int res=AddNewPassword(file,&password);
 				if(res==EXIT_SUCCESS)
@@ -202,13 +191,13 @@ void Dialog(FILE** file)
 				printf("Введите значения пароля для удаления:\n");
 
 				printf("Название пароля\t->");
-				scan_string(password.name, PASSWORD_STRUCT_NAME_SIZE);
+				scan_long_string(password.name);
 				printf("Описание пароля\t->");
-				scan_string(password.description, PASSWORD_STRUCT_DESCRIPTION_SIZE);
+				scan_long_string(password.description);
 				printf("Логин\t\t->");
-				scan_string(password.login, PASSWORD_STRUCT_LOGIN_SIZE);
+				scan_long_string(password.login);
 				printf("Пароль\t\t->");
-				scan_string(password.password, PASSWORD_STRUCT_PASSWORD_SIZE);
+				scan_long_string(password.password);
 
 				int res = DeletePassword(file, &password);
 
@@ -238,11 +227,11 @@ void Dialog(FILE** file)
 			}
 			case COMMAND_DELETE_PASSWORD_BY_NAME:
 			{
-				char name[PASSWORD_STRUCT_NAME_SIZE];
+				char name[100];
 
 				printf("Введите имя пароля для удаления:\n");
 				printf("Название пароля\t->");
-				scan_string(name,PASSWORD_STRUCT_NAME_SIZE);
+				scan_long_string(name);
 
 				int res=DeletePasswordByName(file,name);
 				switch (res)
@@ -270,10 +259,10 @@ void Dialog(FILE** file)
 			}
 			case COMMAND_DELETE_PASSWORD_BY_LOGIN:
 			{
-				char login[PASSWORD_STRUCT_LOGIN_SIZE];
+				char login[100];
 
 				printf("Введите логин для удаления записей:\n");
-				scan_string(login, PASSWORD_STRUCT_LOGIN_SIZE);
+				scan_long_string(login);
 
 				int res = DeletePasswordByLogin(file, login);
 				switch (res)
@@ -366,25 +355,25 @@ void Dialog(FILE** file)
 				if (name_attr)
 				{
 					printf("Название пароля\t->");
-					scan_string(password.name, PASSWORD_STRUCT_NAME_SIZE);
+					scan_long_string(password.name);
 				}
 
 				if (description_attr)
 				{
 					printf("Описание пароля\t->");
-					scan_string(password.description, PASSWORD_STRUCT_DESCRIPTION_SIZE);
+					scan_long_string(password.description);
 				}
 
 				if (login_attr)
 				{
 					printf("Логин\t\t->");
-					scan_string(password.login, PASSWORD_STRUCT_LOGIN_SIZE);
+					scan_long_string(password.login);
 				}
 
 				if (password_attr)
 				{
 					printf("Пароль\t\t->");
-					scan_string(password.password, PASSWORD_STRUCT_PASSWORD_SIZE);
+					scan_long_string(password.password);
 				}
 				password.name		[sizeof(password.name		) - 1] = '\0';
 				password.description[sizeof(password.description) - 1] = '\0';
@@ -669,7 +658,7 @@ int FindPasswords
 		return 3;
 
 	size_t passwords_quantity;
-	long file_size=getFileSize(file);
+	long file_size=get_file_size(file);
 	struct PasswordStruct* passwords = GetAllPasswords(file, &passwords_quantity);
 	if(file_size && !passwords)
 		return 1;

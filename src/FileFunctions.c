@@ -45,10 +45,50 @@ void* decrypt_buffer(void* input, size_t size, size_t* out_size)
 }
 
 //Парсинг полученных данных
-struct PasswordStruct* parse_password_structs(const void* buf, size_t* offset)
+struct PasswordStruct* parse_password_structs(const void* buf, size_t data_size)
 {
-	struct PasswordStruct* passwords;
+	struct PasswordStruct* passwords = NULL;
+	size_t array_size;
+	struct PasswordStruct curr_password;
+	size_t offset = 0;
+	char* pointer = (char*)buf;
+	while(offset != data_size)
+	{
+		curr_password.name_size					= *(unsigned long*)(pointer);
+		curr_password.name						= malloc(curr_password.name_size+1);
+		memcpy(curr_password.name, pointer + sizeof(unsigned long), curr_password.name_size);
+		curr_password.name[curr_password.name_size]='\0';
+		offset += curr_password.password_size + sizeof(unsigned long);
+		pointer = (char*)buf + offset;
+		
+		curr_password.description_size			= *(unsigned long*)(pointer);
+		curr_password.description				= malloc(curr_password.description_size+1);
+		memcpy(curr_password.description, pointer + sizeof(unsigned long), curr_password.description_size);
+		curr_password.description[curr_password.description_size]='\0';
+		offset += curr_password.password_size + sizeof(unsigned long);
+		pointer = (char*)buf + offset;
+		
+		curr_password.login_size				= *(unsigned long*)(pointer);
+		curr_password.login						= malloc(curr_password.login_size+1);
+		memcpy(curr_password.login, pointer + sizeof(unsigned long), curr_password.login_size);
+		curr_password.login[curr_password.login_size]='\0';
+		offset += curr_password.password_size + sizeof(unsigned long);
+		pointer = (char*)buf + offset;
+		
+		curr_password.password_size				= *(unsigned long*)(pointer);
+		curr_password.password					= malloc(curr_password.password_size+1);
+		memcpy(curr_password.password, pointer + sizeof(unsigned long), curr_password.password_size);
+		curr_password.password[curr_password.password_size]='\0';
+		offset += curr_password.password_size + sizeof(unsigned long);
+		pointer = (char*)buf + offset;
+		
+		int res = AddNewPasswordStruct(&passwords, &array_size, &curr_password);
+		if(res)
+			printf("error\n");
+	}
 
+	
+	return passwords;
 }
 
 

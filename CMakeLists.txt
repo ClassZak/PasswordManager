@@ -12,9 +12,18 @@ set(CMAKE_C_STANDARD 11)  # Исправлена опечатка в STANDARD
 add_executable(
 		PasswordManager 
 		${CMAKE_SOURCE_DIR}/src/PasswordManager.c
+		
 		${CMAKE_SOURCE_DIR}/src/PasswordStruct.h
 		${CMAKE_SOURCE_DIR}/src/PasswordStruct.c
+		
+		${CMAKE_SOURCE_DIR}/src/Operations.h
 		${CMAKE_SOURCE_DIR}/src/Operations.c
+		
+		${CMAKE_SOURCE_DIR}/src/FileFunctions.h
+		${CMAKE_SOURCE_DIR}/src/FileFunctions.c
+		
+		${CMAKE_SOURCE_DIR}/src/Functions.h
+		${CMAKE_SOURCE_DIR}/src/Functions.c
 )
 
 target_include_directories(

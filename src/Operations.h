@@ -5,25 +5,15 @@
 #include <limits.h>
 
 #include "PasswordStruct.h"
+#include "FileFunctions.h"
+#include "Functions.h"
 
-void print_with_color(const char* format, int color, ...);
+
 static inline void handle_char_input_error()
 {
 	int c;
 	while ((c = getchar()) != '\n' && c != EOF);
 	print_with_color("Ошибка ввода!\n",91);
-}
-static inline void scan_string(char* buffer,size_t size)
-{
-	if(!size)
-		return;
-
-	fgets(buffer,size,stdin);
-	size_t str_len=strlen(buffer);
-	(buffer)[size-1]='\0';
-
-	if(str_len)
-		buffer[str_len-1]='\0';
 }
 static inline void clear_scan_buffer()
 {
@@ -65,7 +55,7 @@ static inline void print_passwords(struct PasswordStruct* passwords, size_t size
 				passwords[i].description[string_length - 1] == ' ' ||
 				passwords[i].description[string_length - 1] == '\t' ||
 				passwords[i].description[string_length - 1] == '\n'
-				)
+			)
 		{
 			print_with_color("\"", 36);
 			printf("\"%s\"\n",passwords[i].description);
@@ -85,8 +75,8 @@ static inline void print_passwords(struct PasswordStruct* passwords, size_t size
 					passwords[i].login[string_length - 1] == ' ' ||
 					passwords[i].login[string_length - 1] == '\t' ||
 					passwords[i].login[string_length - 1] == '\n'
-					)
 				)
+			)
 		{
 			print_with_color("\"", 36);
 			printf("%s\n",passwords[i].login);
