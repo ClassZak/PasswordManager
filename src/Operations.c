@@ -162,19 +162,11 @@ void Dialog(FILE** file)
 			}
 			case COMMAND_ADD_NEW:
 			{
-				struct PasswordStruct password;
 				printf("Введите значения для нового пароля:\n");
 				
-				printf("Название пароля\t->");
-				scan_long_string(password.name);
-				printf("Описание пароля\t->");
-				scan_long_string(password.description);
-				printf("Логин\t\t->");
-				scan_long_string(password.login);
-				printf("Пароль\t\t->");
-				scan_long_string(password.password);
-
-				int res=AddNewPassword(file,&password);
+				struct PasswordStruct* password = scan_password_struct();
+				
+				int res=AddNewPassword(file,password);
 				if(res==EXIT_SUCCESS)
 					print_with_color("Новый пароль успешно добавлен\n", 32);
 				else
@@ -187,19 +179,11 @@ void Dialog(FILE** file)
 			}
 			case COMMAND_DELETE_PASSWORD:
 			{
-				struct PasswordStruct password;
 				printf("Введите значения пароля для удаления:\n");
+				
+				struct PasswordStruct* password = scan_password_struct();
 
-				printf("Название пароля\t->");
-				scan_long_string(password.name);
-				printf("Описание пароля\t->");
-				scan_long_string(password.description);
-				printf("Логин\t\t->");
-				scan_long_string(password.login);
-				printf("Пароль\t\t->");
-				scan_long_string(password.password);
-
-				int res = DeletePassword(file, &password);
+				int res = DeletePassword(file, password);
 
 				switch (res)
 				{

@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <errno.h>
 #include <limits.h>
+#include <ctype.h>
 
 #include "PasswordStruct.h"
 #include "FileFunctions.h"
@@ -33,80 +34,75 @@ static inline void print_passwords(struct PasswordStruct* passwords, size_t size
 	for (size_t i = 0; i != size; ++i)
 	{
 		printf("Название:\t");
-		string_length=strlen(passwords[i].name);
-		if(!string_length)
+		if (!passwords[i].name_size)
 			printf("\n");
-		if
-		(
-			passwords[i].name[string_length - 1] == ' ' ||
-			passwords[i].name[string_length - 1] == '\t' || 
-			passwords[i].name[string_length - 1] == '\n'
-		)
+		if (isspace(passwords[i].name[passwords[i].name_size - 1]))
 			printf("\"%s\"\n",passwords[i].name);
 		else
 			printf("%s\n", passwords[i].name);
 			
 		printf("Описание:\t");
-		string_length=strlen(passwords[i].description);
-		if(!string_length)
+		if (!passwords[i].description_size)
 			printf("\n");
-		if
-			(
-				passwords[i].description[string_length - 1] == ' ' ||
-				passwords[i].description[string_length - 1] == '\t' ||
-				passwords[i].description[string_length - 1] == '\n'
-			)
-		{
-			print_with_color("\"", 36);
+		if (isspace(passwords[i].description[passwords[i].description_size - 1]))
 			printf("\"%s\"\n",passwords[i].description);
-			print_with_color("\"", 36);
-		}
 		else
 			printf("%s\n", passwords[i].description);
-
+			
 		printf("Логин:\t\t");
-		string_length=strlen(passwords[i].login);
-		if(!string_length)
+		if (!passwords[i].login_size)
 			printf("\n");
-		if
-			(
-				string_length &&
-				(
-					passwords[i].login[string_length - 1] == ' ' ||
-					passwords[i].login[string_length - 1] == '\t' ||
-					passwords[i].login[string_length - 1] == '\n'
-				)
-			)
-		{
-			print_with_color("\"", 36);
-			printf("%s\n",passwords[i].login);
-			print_with_color("\"", 36);
-		}
+		if (isspace(passwords[i].login[passwords[i].login_size - 1]))
+			printf("\"%s\"\n",passwords[i].login);
 		else
 			printf("%s\n", passwords[i].login);
-			
+		
 		printf("Пароль:\t\t");
-		string_length=strlen(passwords[i].password);
-		if(!string_length)
+		if (!passwords[i].password_size)
 			printf("\n");
-		if
-		(
-			passwords[i].password[string_length - 1] == ' ' ||
-			passwords[i].password[string_length - 1] == '\t' || 
-			passwords[i].password[string_length - 1] == '\n'
-		)
-		{
-			print_with_color("\"", 36);
-			printf("%s\n", passwords[i].password);
-			print_with_color("\"", 36);
-		}
+		if (isspace(passwords[i].password[passwords[i].password_size - 1]))
+			printf("\"%s\"\n",passwords[i].password);
 		else
 			printf("%s\n", passwords[i].password);
-
-		printf("\n");
 	}
 }
+static inline struct PasswordStruct* scan_password_struct()
+{
+	struct PasswordStruct* password =(struct PasswordStruct*) malloc(sizeof(struct PasswordStruct));
+	char* buffer=(char*)malloc(1 << sizeof(size_t));
+	memset(buffer, '\0', 1 << sizeof(size_t));
+	
+	printf("Название пароля\t->");
+	scan_long_string(buffer);
+	password->name_size = strlen(buffer);
+	password->name = (char*)malloc(password->name_size+1);
+	strcpy(password->name, buffer);
+	memset(buffer, '\0', 1 << sizeof(size_t));
 
+	printf("Описание пароля\t->");
+	scan_long_string(buffer);
+	password->description_size = strlen(buffer);
+	password->description = (char*)malloc(password->description_size+1);
+	strcpy(password->description, buffer);
+	memset(buffer, '\0', 1 << sizeof(size_t));
+
+	printf("Логин\t\t->");
+	scan_long_string(buffer);
+	password->login_size = strlen(buffer);
+	password->login = (char*)malloc(password->login_size+1);
+	strcpy(password->login, buffer);
+	memset(buffer, '\0', 1 << sizeof(size_t));
+
+	printf("Пароль\t\t->");
+	scan_long_string(buffer);
+	password->password_size = strlen(buffer);
+	password->password = (char*)malloc(password->password_size+1);
+	strcpy(password->name, buffer);
+
+	free(buffer);
+
+	return password;
+}
 
 #define COMMAND_EXIT						0
 #define COMMAND_SHOW_COMMAND_LIST			1
