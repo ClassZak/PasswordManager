@@ -214,10 +214,6 @@ int main(int argc, char** argv)
 
 	CheckPasswordStorage();
 
-	FILE* file=fopen(PASSWORD_FILE,"r+");
-
-	Dialog(&file);
-	fclose(file);
 #ifdef _WIN32
 	system("pause");
 #elif defined __unix__

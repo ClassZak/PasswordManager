@@ -59,7 +59,7 @@ void ShowCommandList()
 	print_with_color("Показать все пароли\t\t%d\n",			96, COMMAND_SHOW_ALL_PASSWORDS		);
 }
 
-void Dialog(FILE** file)
+void Dialog(const char* filename)
 {
 	char input[256];
 	long long_command;
@@ -127,26 +127,24 @@ void Dialog(FILE** file)
 			ShowCommandList();
 			continue;
 		}
-
+		
 		// Приведение к int после всех проверок
 		command = (int)long_command;
-
-		file_size=get_file_size(file);
-
+		
 		switch (command)
 		{
 			case COMMAND_EXIT:
 			{
 				print_with_color("Выход\n",31);
 				return;
-
+				
 				break;
 			}
 			case COMMAND_SHOW_COMMAND_LIST:
 			{
 				ShowCommandList();
 				continue;
-
+				
 				break;
 			}
 			case COMMAND_CLS:
@@ -157,7 +155,7 @@ void Dialog(FILE** file)
 				printf("\033[2J\033[H");
 #endif
 				ShowCommandList();
-
+				
 				break;
 			}
 			case COMMAND_ADD_NEW:
@@ -166,7 +164,8 @@ void Dialog(FILE** file)
 				
 				struct PasswordStruct* password = scan_password_struct();
 				
-				int res=AddNewPassword(file,password);
+				int res=AddNewPassword(filename, password);
+
 				if(res==EXIT_SUCCESS)
 					print_with_color("Новый пароль успешно добавлен\n", 32);
 				else
@@ -183,7 +182,7 @@ void Dialog(FILE** file)
 				
 				struct PasswordStruct* password = scan_password_struct();
 
-				int res = DeletePassword(file, password);
+				int res = DeletePassword(filename, password);
 
 				switch (res)
 				{
@@ -217,7 +216,7 @@ void Dialog(FILE** file)
 				printf("Название пароля\t->");
 				scan_long_string(name);
 
-				int res=DeletePasswordByName(file,name);
+				int res=DeletePasswordByName(filename,name);
 				switch (res)
 				{
 				case 0:
@@ -248,7 +247,7 @@ void Dialog(FILE** file)
 				printf("Введите логин для удаления записей:\n");
 				scan_long_string(login);
 
-				int res = DeletePasswordByLogin(file, login);
+				int res = DeletePasswordByLogin(filename, login);
 				switch (res)
 				{
 				case 0:
@@ -374,7 +373,7 @@ void Dialog(FILE** file)
 				size_t founded_passwords_quantity=0;
 				int res=FindPasswords
 				(
-					file,
+					filename,
 					&password,
 					&founded_passwords,
 					&founded_passwords_quantity,
@@ -424,8 +423,8 @@ void Dialog(FILE** file)
 						continue;
 					}
 				}
-					
-				passwords=GetAllPasswords(file,&passwords_quantity);
+				
+				int result = GetAllPasswordStructs(&passwords, &passwords_quantity, filename);
 
 				if (passwords == NULL)
 				{
@@ -442,26 +441,16 @@ void Dialog(FILE** file)
 	}
 }
 
-int AddNewPassword(FILE** file, struct PasswordStruct* password_struct)
+int AddNewPassword(const char* filename, struct PasswordStruct* password_struct)
 {
-	long prev_file_pos=ftell(*file);
-	fseek(*file,0,SEEK_END);
-	if (fwrite(password_struct, sizeof(struct PasswordStruct), 1, *file)==1)
-	{
-		fseek(*file,prev_file_pos,SEEK_SET);
-		return EXIT_SUCCESS;
-	}
-	else
-	{
-		fseek(*file,prev_file_pos,SEEK_SET);
-		return EXIT_FAILURE;
-	}
+	return EXIT_FAILURE;
 }
 
-int DeletePassword(FILE** file, struct PasswordStruct* password_struct)
+int DeletePassword(const char* filename, struct PasswordStruct* password_struct)
 {
 	size_t passwords_quantity;
-	struct PasswordStruct* passwords=GetAllPasswords(file,&passwords_quantity);
+	struct PasswordStruct* passwords;
+	GetAllPasswordStructs(&passwords, &passwords_quantity, filename);
 	
 	size_t passwords_for_remove_quantity=0;
 	struct PasswordStruct** passwords_for_remove=NULL;
@@ -501,13 +490,15 @@ int DeletePassword(FILE** file, struct PasswordStruct* password_struct)
 			AddNewPasswordStruct(&passwords_for_rewrite,&passwords_for_rewrite_quantity, passwords + i);
 	}
 
-	*file = freopen(PASSWORD_FILE, "w", *file);
+	/**file = freopen(PASSWORD_FILE, "w", *file);
 	int res= WritePasswordStructs(file, passwords_for_rewrite, passwords_for_rewrite_quantity);
 
 	*file = freopen(PASSWORD_FILE, "r+", *file);
 
 	if(res && passwords_for_rewrite_quantity)
 		return EXIT_FAILURE;
+	*/
+	
 
 	if(passwords_for_rewrite)
 		free(passwords_for_rewrite);
@@ -516,13 +507,15 @@ int DeletePassword(FILE** file, struct PasswordStruct* password_struct)
 	if(passwords)
 		free(passwords);
 
+	return EXIT_FAILURE;
 	return EXIT_SUCCESS;
 }
 
-int DeletePasswordByName(FILE** file, const char* name)
+int DeletePasswordByName(const char* filename, const char* name)
 {
 	size_t passwords_quantity;
-	struct PasswordStruct* passwords = GetAllPasswords(file, &passwords_quantity);
+	struct PasswordStruct* passwords;
+	GetAllPasswordStructs(&passwords, &passwords_quantity, filename);
 
 	size_t passwords_for_remove_quantity = 0;
 	struct PasswordStruct** passwords_for_remove = NULL;
@@ -556,11 +549,7 @@ int DeletePasswordByName(FILE** file, const char* name)
 			AddNewPasswordStruct(&passwords_for_rewrite, &passwords_for_rewrite_quantity, passwords + i);
 	}
 
-	*file = freopen(PASSWORD_FILE, "w", *file);
-	int res = WritePasswordStructs(file, passwords_for_rewrite, passwords_for_rewrite_quantity);
-
-	*file = freopen(PASSWORD_FILE, "r+", *file);
-
+	int res = 1;
 	if (res && passwords_for_rewrite_quantity)
 		return EXIT_FAILURE;
 
@@ -574,10 +563,11 @@ int DeletePasswordByName(FILE** file, const char* name)
 	return EXIT_SUCCESS;
 }
 
-int DeletePasswordByLogin(FILE** file, const char* login)
+int DeletePasswordByLogin(const char* filename, const char* login)
 {
 	size_t passwords_quantity;
-	struct PasswordStruct* passwords = GetAllPasswords(file, &passwords_quantity);
+	struct PasswordStruct* passwords;
+	GetAllPasswordStructs(&passwords, &passwords_quantity, filename);
 
 	size_t passwords_for_remove_quantity = 0;
 	struct PasswordStruct** passwords_for_remove = NULL;
@@ -611,11 +601,7 @@ int DeletePasswordByLogin(FILE** file, const char* login)
 			AddNewPasswordStruct(&passwords_for_rewrite, &passwords_for_rewrite_quantity, passwords + i);
 	}
 
-	*file = freopen(PASSWORD_FILE, "w", *file);
-	int res = WritePasswordStructs(file, passwords_for_rewrite, passwords_for_rewrite_quantity);
-
-	*file = freopen(PASSWORD_FILE, "r+", *file);
-
+	int res = 1; 
 	if (res && passwords_for_rewrite_quantity)
 		return EXIT_FAILURE;
 
@@ -631,7 +617,7 @@ int DeletePasswordByLogin(FILE** file, const char* login)
 
 int FindPasswords
 (
-	FILE** file,
+	const char* filename,
 	struct PasswordStruct* params,
 	struct PasswordStruct** founded_passwords,
 	size_t* founded_passwords_quantity,
@@ -641,14 +627,18 @@ int FindPasswords
 	if(params==NULL)
 		return 3;
 
+	{
+		FILE* file = fopen(filename, "wb");
+		if(!file)
+			return 1;
+		size_t file_size = get_file_size(&file);
+		fclose(file);
+		if(!file_size)
+			return 2;
+	}
 	size_t passwords_quantity;
-	long file_size=get_file_size(file);
-	struct PasswordStruct* passwords = GetAllPasswords(file, &passwords_quantity);
-	if(file_size && !passwords)
-		return 1;
-	else if(!file_size && !passwords)
-		return 2;
-
+	struct PasswordStruct* passwords;
+	GetAllPasswordStructs(&passwords, &passwords_quantity, filename);
 
 	if (*founded_passwords != NULL)
 	{

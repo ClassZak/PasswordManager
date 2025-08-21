@@ -133,7 +133,7 @@ int AddNewPasswordStructEmplace(struct PasswordStruct*** array, size_t* arraySiz
 
 
 
-void Dialog(FILE** file);
+void Dialog(const char* filename);
 
 void ShowCommandList();
 static inline void CLS()
@@ -149,7 +149,7 @@ static inline void CLS()
 /// 0 - успех
 /// 1 - ошибка записи в файл
 /// </returns>
-int AddNewPassword(FILE** file, struct PasswordStruct* password_struct);
+int AddNewPassword(const char* filename, struct PasswordStruct* password_struct);
 /// <summary>
 /// 
 /// </summary>
@@ -161,7 +161,7 @@ int AddNewPassword(FILE** file, struct PasswordStruct* password_struct);
 /// 2 - ошибка чтения файла
 /// 3 - не найдены пароли для удаления
 /// </returns>
-int DeletePassword(FILE** file, struct PasswordStruct* password_struct);
+int DeletePassword(const char* filename, struct PasswordStruct* password_struct);
 /// <summary>
 /// 
 /// </summary>
@@ -173,7 +173,7 @@ int DeletePassword(FILE** file, struct PasswordStruct* password_struct);
 /// 2 - ошибка чтения файла
 /// 3 - не найдены пароли для удаления
 /// </returns>
-int DeletePasswordByName(FILE** file, const char* name);
+int DeletePasswordByName(const char* filename, const char* name);
 /// <summary>
 /// 
 /// </summary>
@@ -185,11 +185,7 @@ int DeletePasswordByName(FILE** file, const char* name);
 /// 2 - ошибка чтения файла
 /// 3 - не найдены пароли для удаления
 /// </returns>
-int DeletePasswordByLogin(FILE** file, const char* login);
-static inline struct PasswordStruct* GetAllPasswords(FILE** file, size_t* size)
-{
-	return ReadAllPasswordStructs(file, size);
-}
+int DeletePasswordByLogin(const char* filename, const char* login);
 
 #define PASSWORD_STRUCT_FIND_BY_NAME		0b10000
 #define PASSWORD_STRUCT_FIND_BY_LOGIN		0b01000
@@ -222,7 +218,7 @@ static inline struct PasswordStruct* GetAllPasswords(FILE** file, size_t* size)
 /// </returns>
 int FindPasswords
 (
-	FILE** file,
+	const char* filename,
 	struct PasswordStruct* params,
 	struct PasswordStruct** founded_passwords,
 	size_t* founded_passwords_quantity,

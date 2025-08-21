@@ -6,13 +6,39 @@
 #include <stdint.h>
 #include <string.h>
 
+#define FILE_ERROR_READING   2
+#define FILE_ERROR_NOT_FOUND 3
+#define FILE_ERROR_EMPTY     4
 
 //Получение размера файла -1 - ошибка
 long get_file_size(FILE** file);
+
 //Чтение данных из файла
 void* read_file(const char* filename, size_t* size);
 //Расшифровка данных из файла
 void* decrypt_buffer(void* input, size_t size, size_t* out_size);
 //Парсинг полученных данных
-struct PasswordStruct* parse_password_structs(const void* buf, size_t data_size);
+struct PasswordStruct* parse_password_structs(const void* buf, size_t data_size, size_t* out_size);
+
+//Запись в файл 0 - успех
+int write_file(const char* filename, const char* modes, const char* data);
+//Шифрование данных
+void* encrypt_buffer(void* input, size_t size, size_t* out_size);
+//Преобразование данных в буфер символов
+void* deparse_password_structs(const struct PasswordStruct* passwords, size_t count, size_t* out_size);
+
+//Получение всех структур паролей
+static inline int GetAllPasswordStructs(struct PasswordStruct** passwords, size_t* size, const char* filename)
+{
+	size_t data_size;
+	void* data = read_file(filename, &data_size);
+	size_t decrypted_data_size;
+	void* decrypted_data = decrypt_buffer(data, data_size, &decrypted_data_size);
+	size_t passwords_count;
+	struct PasswordStruct* parsed_passwords = parse_password_structs(decrypted_data, decrypted_data_size, &passwords_count);
+	
+	*passwords = parsed_passwords;
+	
+	return EXIT_SUCCESS;
+}
 

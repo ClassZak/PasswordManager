@@ -21,10 +21,15 @@ void* read_file(const char* filename, size_t* size)
 	FILE* file = fopen(filename,"rb");
 	long file_size = get_file_size(&file);
 	if(file_size == -1)
+	{
+		fclose(file);
 		return NULL;
+	}
 	
 	void* data = malloc(file_size);
 	unsigned int recieved = fread(data, file_size, 1, file);
+
+	fclose(file);
 	if(recieved!=file_size)
 		return NULL;
 	else
@@ -45,7 +50,7 @@ void* decrypt_buffer(void* input, size_t size, size_t* out_size)
 }
 
 //Парсинг полученных данных
-struct PasswordStruct* parse_password_structs(const void* buf, size_t data_size)
+struct PasswordStruct* parse_password_structs(const void* buf, size_t data_size, size_t* out_size)
 {
 	struct PasswordStruct* passwords = NULL;
 	size_t array_size;
@@ -87,8 +92,69 @@ struct PasswordStruct* parse_password_structs(const void* buf, size_t data_size)
 			printf("error\n");
 	}
 
-	
+	*out_size = array_size;
 	return passwords;
 }
 
+//Запись в файл 0 - успех
+int write_file(const char* filename, const char* modes, const char* data)
+{
+	FILE* file = fopen(filename, modes);
+	if(!file)
+	{
+		fclose(file);
+		return EXIT_FAILURE;
+	}
+	
+	fwrite(data, sizeof(char), strlen(data), file);
+	fclose(file);
+	
+	return EXIT_SUCCESS;
+}
+//Шифрование данных
+void* encrypt_buffer(void* input, size_t size, size_t* out_size);
+//Преобразование данных в буфер символов
+void* deparse_password_structs(const struct PasswordStruct* passwords, size_t count, size_t* out_size)
+{
+	size_t size = 0;
+	for(size_t i = 0; i != count;++i)
+	{
+		size += sizeof(	passwords[i].name_size);
+		size += 		passwords[i].name_size;
+		size += sizeof(	passwords[i].description_size);
+		size += 		passwords[i].description_size;
+		size += sizeof(	passwords[i].login_size);
+		size += 		passwords[i].login_size;
+		size += sizeof(	passwords[i].password_size);
+		size +=			passwords[i].password_size;
+	}
+	char* buffer = (char*)malloc(size);
+	
+	char* pointer = buffer;
+	for(size_t i = 0; i != count; ++i)
+	{
+		memcpy(pointer, &passwords[i].name_size, sizeof(passwords[i].name_size));
+		pointer += sizeof(passwords[i].name_size);
+		memcpy(pointer, passwords[i].name, passwords[i].name_size);
+		pointer += passwords[i].name_size;
+
+		memcpy(pointer, &passwords[i].description_size, sizeof(passwords[i].description_size));
+		pointer += sizeof(passwords[i].description_size);
+		memcpy(pointer, passwords[i].description, passwords[i].description_size);
+		pointer += passwords[i].description_size;
+
+		memcpy(pointer, &passwords[i].login_size, sizeof(passwords[i].login_size));
+		pointer += sizeof(passwords[i].login_size);
+		memcpy(pointer, passwords[i].login, passwords[i].login_size);
+		pointer += passwords[i].login_size;
+
+		memcpy(pointer, &passwords[i].password_size, sizeof(passwords[i].password_size));
+		pointer += sizeof(passwords[i].password_size);
+		memcpy(pointer, passwords[i].password, passwords[i].password_size);
+		pointer += passwords[i].password_size;
+	}
+
+	*out_size = size;
+	return (void*)buffer;
+}
 
