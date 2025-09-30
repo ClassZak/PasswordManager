@@ -92,9 +92,7 @@ void Dialog(const char* filename)
 		
 		char* endptr;
 		errno = 0;
-		print_with_color("input:\"%s\"\n", 96, input);
 		long_command = strtol(input, &endptr, 10);
-		print_with_color("endptr:\"%s\"\nerrno:%d\n", 96, endptr);
 		
 		// Проверка ошибок преобразования
 		if (*endptr != '\0' || errno == ERANGE)

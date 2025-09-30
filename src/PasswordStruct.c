@@ -34,15 +34,27 @@ int AddNewPasswordStruct(struct PasswordStruct** array, size_t* arraySize, struc
 		*array=malloc(sizeof(struct PasswordStruct));
 		if (*array != NULL)
 		{
-			strcpy((*array)->name,		newElement->name		);
-			strcpy((*array)->description,	newElement->description);
-			strcpy((*array)->login,		newElement->login		);
-			strcpy((*array)->password,	newElement->password	);
-			
 			(*array)->name_size			= newElement->name_size;
 			(*array)->description_size	= newElement->description_size;
 			(*array)->login_size		= newElement->login_size;
 			(*array)->password_size		= newElement->password_size;
+
+			(*array)->name			= (char*)malloc((*array)->name_size			+1);
+			(*array)->description	= (char*)malloc((*array)->description_size	+1);
+			(*array)->login			= (char*)malloc((*array)->login_size		+1);
+			(*array)->password		= (char*)malloc((*array)->password_size		+1);
+			if(
+				(*array)->name==NULL		||
+				(*array)->description==NULL	||
+				(*array)->login==NULL		||
+				(*array)->password==NULL
+			)
+				return EXIT_FAILURE;
+
+			strcpy((*array)->name,			newElement->name		);
+			strcpy((*array)->description,	newElement->description);
+			strcpy((*array)->login,			newElement->login		);
+			strcpy((*array)->password,		newElement->password	);
 		}
 		else
 			return EXIT_FAILURE;

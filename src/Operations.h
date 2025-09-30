@@ -97,7 +97,8 @@ static inline struct PasswordStruct* scan_password_struct()
 	scan_long_string(buffer);
 	password->password_size = strlen(buffer);
 	password->password = (char*)malloc(password->password_size+1);
-	strcpy(password->name, buffer);
+	strcpy(password->password, buffer);
+	memset(buffer, '\0', 1 << sizeof(size_t));
 
 	free(buffer);
 
