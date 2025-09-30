@@ -213,6 +213,7 @@ int main(int argc, char** argv)
 
 
 	CheckPasswordStorage();
+	Dialog(PASSWORD_FILE);
 
 #ifdef _WIN32
 	system("pause");

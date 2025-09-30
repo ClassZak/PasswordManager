@@ -25,9 +25,13 @@ void* read_file(const char* filename, size_t* size)
 		fclose(file);
 		return NULL;
 	}
-	
-	void* data = malloc(file_size);
+
+	//printf("filename:%s\nfile size:%ld\n\n",filename,file_size);
+
+	void* data = malloc(file_size+1);
 	unsigned int recieved = fread(data, file_size, 1, file);
+
+	//printf("\"%s\"\n%d\n\n",(char*)data,recieved);
 
 	fclose(file);
 	if(recieved!=file_size)
@@ -53,7 +57,7 @@ void* decrypt_buffer(void* input, size_t size, size_t* out_size)
 struct PasswordStruct* parse_password_structs(const void* buf, size_t data_size, size_t* out_size)
 {
 	struct PasswordStruct* passwords = NULL;
-	size_t array_size;
+	size_t array_size=0;
 	struct PasswordStruct curr_password;
 	size_t offset = 0;
 	char* pointer = (char*)buf;

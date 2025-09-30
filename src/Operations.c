@@ -443,6 +443,18 @@ void Dialog(const char* filename)
 
 int AddNewPassword(const char* filename, struct PasswordStruct* password_struct)
 {
+	size_t file_data_size = 0;
+	void* file_data = read_file(filename, &file_data_size);
+	size_t decrypt_file_data_size = 0;
+	void* decrypt_file_data = decrypt_buffer(file_data, file_data_size, &decrypt_file_data_size);
+	size_t passwords_count = 0;
+	struct PasswordStruct* passwords = parse_password_structs(decrypt_file_data, decrypt_file_data_size, &passwords_count);
+
+	int res = AddNewPasswordStruct(&passwords, &passwords_count, password_struct);
+
+	printf("res:%d\n",res);
+	print_passwords(passwords, passwords_count);
+
 	return EXIT_FAILURE;
 }
 
