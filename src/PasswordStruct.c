@@ -70,15 +70,28 @@ int AddNewPasswordStruct(struct PasswordStruct** array, size_t* arraySize, struc
 		if(old_array!=NULL)
 			for (size_t i = 0; i != *arraySize; i++)
 			{
-				strcpy(old_array[i].name,			(*array)->name);
-				strcpy(old_array[i].description,	(*array)->description);
-				strcpy(old_array[i].login,		(*array)->login);
-				strcpy(old_array[i].password,		(*array)->password);
-				
 				old_array[i].name_size			= (*array)->name_size;
 				old_array[i].description_size	= (*array)->description_size;
 				old_array[i].login_size			= (*array)->login_size;
 				old_array[i].password_size		= (*array)->password_size;
+
+				old_array[i].name			= malloc((*array)->name_size		+1);
+				old_array[i].description	= malloc((*array)->description_size	+1);
+				old_array[i].login			= malloc((*array)->login_size		+1);
+				old_array[i].password		= malloc((*array)->password_size	+1);
+
+				if (
+					old_array[i].name == NULL ||
+					old_array[i].description == NULL ||
+					old_array[i].login == NULL ||
+					old_array[i].password == NULL
+				)
+					return EXIT_FAILURE;
+
+				strcpy(old_array[i].name,			(*array)->name);
+				strcpy(old_array[i].description,	(*array)->description);
+				strcpy(old_array[i].login,			(*array)->login);
+				strcpy(old_array[i].password,		(*array)->password);
 			}
 		
 		free(*array);
@@ -88,27 +101,55 @@ int AddNewPasswordStruct(struct PasswordStruct** array, size_t* arraySize, struc
 		{
 			for (size_t i = 0; i != *arraySize; ++i)
 			{
+				((*array)+i)->name_size			= old_array[i].name_size;
+				((*array)+i)->description_size	= old_array[i].description_size;
+				((*array)+i)->login_size		= old_array[i].login_size;
+				((*array)+i)->password_size		= old_array[i].password_size;
+
+				((*array) + i)->name			= malloc(old_array[i].name_size			+1);
+				((*array) + i)->description		= malloc(old_array[i].description_size	+1);
+				((*array) + i)->login			= malloc(old_array[i].login_size		+1);
+				((*array) + i)->password		= malloc(old_array[i].password_size		+1);
+
+				if(
+					((*array) + i)->name		== NULL ||
+					((*array) + i)->description	== NULL ||
+					((*array) + i)->login		== NULL ||
+					((*array) + i)->password	== NULL
+				)
+					return EXIT_FAILURE;
+
 				strcpy(((*array)+i)->name		,old_array[i].name			);
 				strcpy(((*array)+i)->description,old_array[i].description	);
 				strcpy(((*array)+i)->login		,old_array[i].login			);
 				strcpy(((*array)+i)->password	,old_array[i].password		);
 				
-				((*array)+1)->name_size			= old_array[i].name_size;
-				((*array)+1)->description_size	= old_array[i].description_size;
-				((*array)+1)->login_size		= old_array[i].login_size;
-				((*array)+1)->password_size		= old_array[i].password_size;
 			}
-			
-			
-			strcpy(((*array)[*arraySize]).name,			newElement->name			);
-			strcpy(((*array)[*arraySize]).description,	newElement->description	);
-			strcpy(((*array)[*arraySize]).login,			newElement->login			);
-			strcpy(((*array)[*arraySize]).password,		newElement->password		);
 			
 			((*array)[*arraySize]).name_size		= newElement->name_size;
 			((*array)[*arraySize]).description_size	= newElement->description_size;
 			((*array)[*arraySize]).login_size		= newElement->login_size;
 			((*array)[*arraySize]).password_size	= newElement->password_size;
+
+			((*array)[*arraySize]).name			= malloc(newElement->name_size			+ 1);
+			((*array)[*arraySize]).description	= malloc(newElement->description_size	+ 1);
+			((*array)[*arraySize]).login		= malloc(newElement->login_size			+ 1);
+			((*array)[*arraySize]).password		= malloc(newElement->password_size		+ 1);
+
+			if (
+				((*array)[*arraySize]).name == NULL ||
+				((*array)[*arraySize]).description == NULL ||
+				((*array)[*arraySize]).login == NULL ||
+				((*array)[*arraySize]).password == NULL
+			)
+				return EXIT_FAILURE;
+
+			
+			strcpy(((*array)[*arraySize]).name,			newElement->name		);
+			strcpy(((*array)[*arraySize]).description,	newElement->description	);
+			strcpy(((*array)[*arraySize]).login,		newElement->login		);
+			strcpy(((*array)[*arraySize]).password,		newElement->password	);
+			
 			
 			++(*arraySize);
 			

@@ -410,16 +410,23 @@ void Dialog(const char* filename)
 			}
 			case COMMAND_SHOW_ALL_PASSWORDS:
 			{
-
 				struct PasswordStruct* passwords;
 				size_t passwords_quantity;
 
 				{
+					FILE* file = fopen(filename, "r");
+					if(!file)
+					{
+						print_with_color("Ошибка чтения паролей\n", 91);
+						continue;
+					}
+					file_size = get_file_size(&file);
 					if (file_size == 0)
 					{
 						print_with_color("Файл с паролями пуст\n",95);
 						continue;
 					}
+					fclose(file);
 				}
 				
 				int result = GetAllPasswordStructs(&passwords, &passwords_quantity, filename);
@@ -448,12 +455,18 @@ int AddNewPassword(const char* filename, struct PasswordStruct* password_struct)
 	size_t passwords_count = 0;
 	struct PasswordStruct* passwords = parse_password_structs(decrypt_file_data, decrypt_file_data_size, &passwords_count);
 
-	int res = AddNewPasswordStruct(&passwords, &passwords_count, password_struct);
+	if(AddNewPasswordStruct(&passwords, &passwords_count, password_struct))
+		return EXIT_FAILURE;
+	
+	size_t deparsed_data_size = 0;
+	void* deparsed_data = deparse_password_structs(passwords, passwords_count, &deparsed_data_size);
+	size_t encrypt_data_size = 0;
+	void* encrypt_data = encrypt_buffer(deparsed_data, deparsed_data_size, &encrypt_data_size);
+	
+	if(write_file(filename, "w", encrypt_data, encrypt_data_size))
+		return EXIT_FAILURE;
 
-	printf("res:%d\n",res);
-	print_passwords(passwords, passwords_count);
-
-	return EXIT_FAILURE;
+	return EXIT_SUCCESS;
 }
 
 int DeletePassword(const char* filename, struct PasswordStruct* password_struct)

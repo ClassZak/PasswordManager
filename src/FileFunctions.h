@@ -21,7 +21,7 @@ void* decrypt_buffer(void* input, size_t size, size_t* out_size);
 struct PasswordStruct* parse_password_structs(const void* buf, size_t data_size, size_t* out_size);
 
 //Запись в файл 0 - успех
-int write_file(const char* filename, const char* modes, const char* data);
+int write_file(const char* filename, const char* modes, const char* data, size_t data_size);
 //Шифрование данных
 void* encrypt_buffer(void* input, size_t size, size_t* out_size);
 //Преобразование данных в буфер символов
@@ -30,14 +30,24 @@ void* deparse_password_structs(const struct PasswordStruct* passwords, size_t co
 //Получение всех структур паролей
 static inline int GetAllPasswordStructs(struct PasswordStruct** passwords, size_t* size, const char* filename)
 {
+	*size = 0;
 	size_t data_size;
 	void* data = read_file(filename, &data_size);
+	if(!data)
+		return EXIT_FAILURE;
+
 	size_t decrypted_data_size;
 	void* decrypted_data = decrypt_buffer(data, data_size, &decrypted_data_size);
+	if (!decrypted_data)
+		return EXIT_FAILURE;
+
 	size_t passwords_count;
 	struct PasswordStruct* parsed_passwords = parse_password_structs(decrypted_data, decrypted_data_size, &passwords_count);
+	if (!parsed_passwords)
+		return EXIT_FAILURE;
 	
 	*passwords = parsed_passwords;
+	*size = passwords_count;
 	
 	return EXIT_SUCCESS;
 }
