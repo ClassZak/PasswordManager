@@ -344,6 +344,18 @@ void Dialog(const char* filename)
 				struct PasswordStruct password = {0,NULL,0,NULL,0,NULL,0,NULL};
 				printf("Введите значения пароля для поиска:\n");
 
+				password.name = malloc((size_t)1 << sizeof(size_t));
+				if(!password.name)
+					continue;
+				password.description = malloc((size_t)1 << sizeof(size_t));
+				if (!password.description)
+					continue;
+				password.login = malloc((size_t)1 << sizeof(size_t));
+				if (!password.login)
+					continue;
+				password.password = malloc((size_t)1 << sizeof(size_t));
+				if (!password.password)
+					continue;
 				if (name_attr)
 				{
 					printf("Название пароля\t->");
@@ -647,7 +659,7 @@ int FindPasswords
 		return 3;
 
 	{
-		FILE* file = fopen(filename, "wb");
+		FILE* file = fopen(filename, "rb");
 		if(!file)
 			return 1;
 		size_t file_size = get_file_size(&file);
