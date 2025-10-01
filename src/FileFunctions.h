@@ -52,3 +52,17 @@ static inline int GetAllPasswordStructs(struct PasswordStruct** passwords, size_
 	return EXIT_SUCCESS;
 }
 
+//Запись всех структур паролей
+static inline int WriteAllPasswordStructs(const char* filename, struct PasswordStruct* passwords, size_t passwords_count)
+{
+	size_t deparsed_data_size = 0;
+	void* deparsed_data = deparse_password_structs(passwords, passwords_count, &deparsed_data_size);
+	size_t encrypt_data_size = 0;
+	void* encrypt_data = encrypt_buffer(deparsed_data, deparsed_data_size, &encrypt_data_size);
+
+	if (write_file(filename, "w", encrypt_data, encrypt_data_size))
+		return EXIT_FAILURE;
+
+	return EXIT_SUCCESS;
+}
+

@@ -330,7 +330,7 @@ void Dialog(const char* filename)
 				}
 
 				size_t passwords_quantity;
-				struct PasswordStruct password;
+				struct PasswordStruct password = {0,NULL,0,NULL,0,NULL,0,NULL};
 				printf("Введите значения пароля для поиска:\n");
 
 				if (name_attr)
@@ -457,13 +457,7 @@ int AddNewPassword(const char* filename, struct PasswordStruct* password_struct)
 
 	if(AddNewPasswordStruct(&passwords, &passwords_count, password_struct))
 		return EXIT_FAILURE;
-	
-	size_t deparsed_data_size = 0;
-	void* deparsed_data = deparse_password_structs(passwords, passwords_count, &deparsed_data_size);
-	size_t encrypt_data_size = 0;
-	void* encrypt_data = encrypt_buffer(deparsed_data, deparsed_data_size, &encrypt_data_size);
-	
-	if(write_file(filename, "w", encrypt_data, encrypt_data_size))
+	if(WriteAllPasswordStructs(filename,passwords,passwords_count))
 		return EXIT_FAILURE;
 
 	return EXIT_SUCCESS;
@@ -513,25 +507,19 @@ int DeletePassword(const char* filename, struct PasswordStruct* password_struct)
 			AddNewPasswordStruct(&passwords_for_rewrite,&passwords_for_rewrite_quantity, passwords + i);
 	}
 
-	/**file = freopen(PASSWORD_FILE, "w", *file);
-	int res= WritePasswordStructs(file, passwords_for_rewrite, passwords_for_rewrite_quantity);
-
-	*file = freopen(PASSWORD_FILE, "r+", *file);
-
-	if(res && passwords_for_rewrite_quantity)
-		return EXIT_FAILURE;
-	*/
-	
-
-	if(passwords_for_rewrite)
-		free(passwords_for_rewrite);
+	int res = WriteAllPasswordStructs(filename, passwords_for_rewrite, passwords_for_rewrite_quantity);
 	if(passwords_for_remove)
 		free(passwords_for_remove);
 	if(passwords)
 		free(passwords);
+	if(passwords_for_rewrite)
+		free(passwords_for_rewrite);
 
-	return EXIT_FAILURE;
-	return EXIT_SUCCESS;
+
+	if(res)
+		return res;
+	else
+		return EXIT_SUCCESS;
 }
 
 int DeletePasswordByName(const char* filename, const char* name)
