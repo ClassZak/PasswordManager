@@ -162,7 +162,11 @@ void Dialog(const char* filename)
 				
 				struct PasswordStruct* password = scan_password_struct();
 				
-				int res=AddNewPassword(filename, password);
+				int res;
+				if(password)
+					res=AddNewPassword(filename, password);
+				else
+					res=2;
 
 				if(res==EXIT_SUCCESS)
 					print_with_color("Новый пароль успешно добавлен\n", 32);
@@ -180,7 +184,11 @@ void Dialog(const char* filename)
 				
 				struct PasswordStruct* password = scan_password_struct();
 
-				int res = DeletePassword(filename, password);
+				int res;
+				if (password)
+					res = AddNewPassword(filename, password);
+				else
+					res = 4;
 
 				switch (res)
 				{
@@ -200,6 +208,9 @@ void Dialog(const char* filename)
 					break;
 					case 3:
 						print_with_color("Не найдено записей для удаления", 91);
+					break;
+					case 4:
+						print_with_color("Не удалось добавить новый пароль. Ошибка ввода", 91);
 					break;
 				}
 				printf("\n");
@@ -338,19 +349,16 @@ void Dialog(const char* filename)
 					printf("Название пароля\t->");
 					scan_long_string(password.name);
 				}
-
 				if (description_attr)
 				{
 					printf("Описание пароля\t->");
 					scan_long_string(password.description);
 				}
-
 				if (login_attr)
 				{
 					printf("Логин\t\t->");
 					scan_long_string(password.login);
 				}
-
 				if (password_attr)
 				{
 					printf("Пароль\t\t->");
@@ -560,10 +568,7 @@ int DeletePasswordByName(const char* filename, const char* name)
 			AddNewPasswordStruct(&passwords_for_rewrite, &passwords_for_rewrite_quantity, passwords + i);
 	}
 
-	int res = 1;
-	if (res && passwords_for_rewrite_quantity)
-		return EXIT_FAILURE;
-
+	int res = WriteAllPasswordStructs(filename, passwords_for_rewrite, passwords_for_rewrite_quantity);
 	if (passwords_for_rewrite)
 		free(passwords_for_rewrite);
 	if (passwords_for_remove)
@@ -571,7 +576,10 @@ int DeletePasswordByName(const char* filename, const char* name)
 	if (passwords)
 		free(passwords);
 
-	return EXIT_SUCCESS;
+	if(res)
+		return res;
+	else
+		return EXIT_SUCCESS;
 }
 
 int DeletePasswordByLogin(const char* filename, const char* login)
@@ -612,10 +620,7 @@ int DeletePasswordByLogin(const char* filename, const char* login)
 			AddNewPasswordStruct(&passwords_for_rewrite, &passwords_for_rewrite_quantity, passwords + i);
 	}
 
-	int res = 1; 
-	if (res && passwords_for_rewrite_quantity)
-		return EXIT_FAILURE;
-
+	int res = WriteAllPasswordStructs(filename, passwords_for_rewrite, passwords_for_rewrite_quantity);
 	if (passwords_for_rewrite)
 		free(passwords_for_rewrite);
 	if (passwords_for_remove)
@@ -623,7 +628,10 @@ int DeletePasswordByLogin(const char* filename, const char* login)
 	if (passwords)
 		free(passwords);
 
-	return EXIT_SUCCESS;
+	if (res)
+		return res;
+	else
+		return EXIT_SUCCESS;
 }
 
 int FindPasswords

@@ -73,10 +73,14 @@ static inline struct PasswordStruct* scan_password_struct()
 {
 	struct PasswordStruct* password =(struct PasswordStruct*) malloc(sizeof(struct PasswordStruct));
 	char* buffer=(char*)malloc((size_t)1 << (sizeof(size_t)));
+	if(!buffer || !password)
+		return NULL;
 	memset(buffer, '\0', (size_t)1 << (sizeof(size_t)));
 	
 	printf("Название пароля\t->");
 	scan_long_string(buffer);
+	if(!strlen(buffer))
+		return NULL;
 	password->name_size = strlen(buffer);
 	password->name = (char*)malloc(password->name_size+1);
 	if(!password->name)
@@ -86,6 +90,8 @@ static inline struct PasswordStruct* scan_password_struct()
 
 	printf("Описание пароля\t->");
 	scan_long_string(buffer);
+	if (!strlen(buffer))
+		return NULL;
 	password->description_size = strlen(buffer);
 	password->description = (char*)malloc(password->description_size+1);
 	if (!password->description)
@@ -95,6 +101,8 @@ static inline struct PasswordStruct* scan_password_struct()
 
 	printf("Логин\t\t->");
 	scan_long_string(buffer);
+	if (!strlen(buffer))
+		return NULL;
 	password->login_size = strlen(buffer);
 	password->login = (char*)malloc(password->login_size+1);
 	if (!password->login)
@@ -104,6 +112,8 @@ static inline struct PasswordStruct* scan_password_struct()
 
 	printf("Пароль\t\t->");
 	scan_long_string(buffer);
+	if (!strlen(buffer))
+		return NULL;
 	password->password_size = strlen(buffer);
 	password->password = (char*)malloc(password->password_size+1);
 	if (!password->password)

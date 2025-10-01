@@ -68,17 +68,17 @@ int AddNewPasswordStruct(struct PasswordStruct** array, size_t* arraySize, struc
 		struct PasswordStruct* old_array=malloc(sizeof(struct PasswordStruct)*(*arraySize));
 		
 		if(old_array!=NULL)
-			for (size_t i = 0; i != *arraySize; i++)
+			for (size_t i = 0; i != *arraySize; ++i)
 			{
-				old_array[i].name_size			= (*array)->name_size;
-				old_array[i].description_size	= (*array)->description_size;
-				old_array[i].login_size			= (*array)->login_size;
-				old_array[i].password_size		= (*array)->password_size;
+				old_array[i].name_size			= (*array + i)->name_size;
+				old_array[i].description_size	= (*array + i)->description_size;
+				old_array[i].login_size			= (*array + i)->login_size;
+				old_array[i].password_size		= (*array + i)->password_size;
 
-				old_array[i].name			= malloc((*array)->name_size		+1);
-				old_array[i].description	= malloc((*array)->description_size	+1);
-				old_array[i].login			= malloc((*array)->login_size		+1);
-				old_array[i].password		= malloc((*array)->password_size	+1);
+				old_array[i].name			= malloc((*array + i)->name_size		+1);
+				old_array[i].description	= malloc((*array + i)->description_size	+1);
+				old_array[i].login			= malloc((*array + i)->login_size		+1);
+				old_array[i].password		= malloc((*array + i)->password_size	+1);
 
 				if (
 					old_array[i].name == NULL ||
@@ -88,10 +88,10 @@ int AddNewPasswordStruct(struct PasswordStruct** array, size_t* arraySize, struc
 				)
 					return EXIT_FAILURE;
 
-				strcpy(old_array[i].name,			(*array)->name);
-				strcpy(old_array[i].description,	(*array)->description);
-				strcpy(old_array[i].login,			(*array)->login);
-				strcpy(old_array[i].password,		(*array)->password);
+				strcpy(old_array[i].name,			(*array + i)->name);
+				strcpy(old_array[i].description,	(*array + i)->description);
+				strcpy(old_array[i].login,			(*array + i)->login);
+				strcpy(old_array[i].password,		(*array + i)->password);
 			}
 		
 		free(*array);
