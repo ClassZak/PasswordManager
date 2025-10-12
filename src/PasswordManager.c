@@ -18,6 +18,11 @@
 #ifndef PASSWORD_FILE 
 #define PASSWORD_FILE ".Passwords.bin"
 #endif // !PASSWORD_FILE 
+#ifndef CHIPHER_FILE_CONFIG "ChipterFilePath"
+#define CHIPHER_FILE
+#endif // !CHIPHER_FILE
+
+
 
 int TryToCreateFile(const char** filename) // 0 - успех. Иначе - код ошибки
 {
