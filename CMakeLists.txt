@@ -9,21 +9,35 @@ project(PasswordManager VERSION 1.0
 
 set(CMAKE_C_STANDARD 11)  # Исправлена опечатка в STANDARD
 
+
+set(SOURCES 
+	${CMAKE_SOURCE_DIR}/src/PasswordManager.c
+
+	${CMAKE_SOURCE_DIR}/src/ConfigurationStruct.h
+	
+	${CMAKE_SOURCE_DIR}/src/PasswordStruct.h
+	${CMAKE_SOURCE_DIR}/src/PasswordStruct.c
+	
+	${CMAKE_SOURCE_DIR}/src/Operations.h
+	${CMAKE_SOURCE_DIR}/src/Operations.c
+	
+	${CMAKE_SOURCE_DIR}/src/FileFunctions.h
+	${CMAKE_SOURCE_DIR}/src/FileFunctions.c
+	
+	${CMAKE_SOURCE_DIR}/src/Functions.h
+	${CMAKE_SOURCE_DIR}/src/Functions.c
+)
+
+
+set(DEPENDENCIES
+		${CMAKE_SOURCE_DIR}/deps/ini.h
+		${CMAKE_SOURCE_DIR}/deps/ini.c
+)
+
 add_executable(
-		PasswordManager 
-		${CMAKE_SOURCE_DIR}/src/PasswordManager.c
-		
-		${CMAKE_SOURCE_DIR}/src/PasswordStruct.h
-		${CMAKE_SOURCE_DIR}/src/PasswordStruct.c
-		
-		${CMAKE_SOURCE_DIR}/src/Operations.h
-		${CMAKE_SOURCE_DIR}/src/Operations.c
-		
-		${CMAKE_SOURCE_DIR}/src/FileFunctions.h
-		${CMAKE_SOURCE_DIR}/src/FileFunctions.c
-		
-		${CMAKE_SOURCE_DIR}/src/Functions.h
-		${CMAKE_SOURCE_DIR}/src/Functions.c
+		PasswordManager
+		${SOURCES}
+		${DEPENDENCIES}
 )
 
 target_include_directories(

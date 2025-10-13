@@ -3,9 +3,13 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+deps/*.c
+deps/*.h
 build/
 .vs*/
 .Passwords.bin
+config.ini
+
 
 # User-specific files
 *.rsuser

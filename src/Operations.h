@@ -10,6 +10,9 @@
 #include "Functions.h"
 
 
+#include "ConfigurationStruct.h"
+
+
 static inline void handle_char_input_error()
 {
 	int c;
@@ -155,7 +158,7 @@ int AddNewPasswordStructEmplace(struct PasswordStruct*** array, size_t* arraySiz
 
 
 
-void Dialog(const char* filename);
+void Dialog(const char* filename, struct ConfigurationStruct* config);
 
 void ShowCommandList();
 static inline void CLS()

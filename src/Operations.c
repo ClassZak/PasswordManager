@@ -59,7 +59,7 @@ void ShowCommandList()
 	print_with_color("Показать все пароли\t\t%d\n",			96, COMMAND_SHOW_ALL_PASSWORDS		);
 }
 
-void Dialog(const char* filename)
+void Dialog(const char* filename,struct ConfigurationStruct* config)
 {
 	char input[256];
 	long long_command;

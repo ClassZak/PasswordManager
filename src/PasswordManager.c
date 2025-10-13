@@ -18,11 +18,15 @@
 #ifndef PASSWORD_FILE 
 #define PASSWORD_FILE ".Passwords.bin"
 #endif // !PASSWORD_FILE 
-#ifndef CHIPHER_FILE_CONFIG "ChipterFilePath"
-#define CHIPHER_FILE
-#endif // !CHIPHER_FILE
+
+// Libraries
+#include "../deps/ini.h"
 
 
+
+
+// Config
+#include "ConfigurationStruct.h"
 
 int TryToCreateFile(const char** filename) // 0 - успех. Иначе - код ошибки
 {
@@ -215,10 +219,17 @@ int main(int argc, char** argv)
 	SetConsoleOutputCP(1251);
 	EnableVTMode();
 #endif // _WIN32
-
+	
+	struct ConfigurationStruct config;
+	if(ini_parse("config.ini", ini_config_parse_handler, &config) < 0)
+	{
+		print_with_color("Failed to load app config!\n", 91);
+		return EXIT_FAILURE;
+	}
+	printf("cipher_file_path: %s\n", config.cipher_file_path);
 
 	CheckPasswordStorage();
-	Dialog(PASSWORD_FILE);
+	Dialog(PASSWORD_FILE, &config);
 
 #ifdef _WIN32
 	system("pause");
