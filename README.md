@@ -10,6 +10,6 @@ Simple password manager for passwords storing.
 
 
 <p align="center">
-	![Image alt](https://github.com/ClassZak/PasswordManager/blob/master/screenshot1.png)
-	![Image alt](https://github.com/ClassZak/PasswordManager/blob/master/screenshot2.png)
+	<img align="center" width="100" height="100" src="https://github.com/ClassZak/PasswordManager/blob/master/screenshot1.png"/>
+	<img align="center" width="100" height="100" src="https://github.com/ClassZak/PasswordManager/blob/master/screenshot2.png"/>
 </p>
