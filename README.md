@@ -11,5 +11,7 @@ Simple password manager for passwords storing.
 
 <p align="center">
 	<img align="center" width="100" height="100" src="https://github.com/ClassZak/PasswordManager/blob/master/screenshot1.png"/>
+</p>
+<p align="center">
 	<img align="center" width="100" height="100" src="https://github.com/ClassZak/PasswordManager/blob/master/screenshot2.png"/>
 </p>
