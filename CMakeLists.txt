@@ -8,12 +8,13 @@ project(PasswordManager VERSION 1.0
 )
 
 set(CMAKE_C_STANDARD 11)  # Исправлена опечатка в STANDARD
-
-
 set(SOURCES 
+	
 	${CMAKE_SOURCE_DIR}/src/PasswordManager.c
-
+	
 	${CMAKE_SOURCE_DIR}/src/ConfigurationStruct.h
+	${CMAKE_SOURCE_DIR}/src/ChipherStruct.h
+	${CMAKE_SOURCE_DIR}/src/ChipherStructOperations.h
 	
 	${CMAKE_SOURCE_DIR}/src/PasswordStruct.h
 	${CMAKE_SOURCE_DIR}/src/PasswordStruct.c

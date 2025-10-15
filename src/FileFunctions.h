@@ -1,10 +1,15 @@
 #pragma once
 #include "PasswordStruct.h"
+#include "ConfigurationStruct.h"
+#include "ChipherStruct.h"
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+
+#include <openssl/evp.h>
+#include <openssl/err.h>
 
 #define FILE_ERROR_READING   2
 #define FILE_ERROR_NOT_FOUND 3
@@ -23,7 +28,7 @@ struct PasswordStruct* parse_password_structs(const void* buf, size_t data_size,
 //Запись в файл 0 - успех
 int write_file(const char* filename, const char* modes, const char* data, size_t data_size);
 //Шифрование данных
-void* encrypt_buffer(void* input, size_t size, size_t* out_size);
+void* encrypt_buffer(void* input, size_t size, size_t* out_size, struct ChipherStruct* chipher);
 //Преобразование данных в буфер символов
 void* deparse_password_structs(const struct PasswordStruct* passwords, size_t count, size_t* out_size);
 
@@ -53,14 +58,14 @@ static inline int GetAllPasswordStructs(struct PasswordStruct** passwords, size_
 }
 
 //Запись всех структур паролей
-static inline int WriteAllPasswordStructs(const char* filename, struct PasswordStruct* passwords, size_t passwords_count)
+static inline int WriteAllPasswordStructs(const char* filename, struct PasswordStruct* passwords, size_t passwords_count, struct ChipherStruct* chipher)
 {
 	size_t deparsed_data_size = 0;
 	void* deparsed_data = deparse_password_structs(passwords, passwords_count, &deparsed_data_size);
 	size_t encrypt_data_size = 0;
-	void* encrypt_data = encrypt_buffer(deparsed_data, deparsed_data_size, &encrypt_data_size);
+	void* encrypt_data = encrypt_buffer(deparsed_data, deparsed_data_size, &encrypt_data_size, chipher);
 
-	if (write_file(filename, "w", encrypt_data, encrypt_data_size))
+	if (write_file(filename, "w", (const char*)encrypt_data,encrypt_data_size))
 		return EXIT_FAILURE;
 
 	return EXIT_SUCCESS;

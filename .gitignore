@@ -7,9 +7,8 @@ deps/*.c
 deps/*.h
 build/
 .vs*/
-.Passwords.bin
 config.ini
-
+*.bin
 
 # User-specific files
 *.rsuser

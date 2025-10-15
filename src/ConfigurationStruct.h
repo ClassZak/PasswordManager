@@ -10,7 +10,8 @@
 
 struct ConfigurationStruct
 {
-	char* cipher_file_path;
+	char* key_file_path;
+	char* iv_file_path;
 };
 
 static inline int ini_config_parse_handler(void* user, const char* section, const char* name, const char* value)
@@ -20,15 +21,12 @@ static inline int ini_config_parse_handler(void* user, const char* section, cons
 	size_t lenght = strlen(value);
 
 	#define MATCH(s, n) strcmp(section, s) == 0 && strcmp(name, n) == 0
-	if (MATCH("app", "cipher_file_path"))
-	{
-		pconfig->cipher_file_path = malloc(lenght+1);
-		strcpy(pconfig->cipher_file_path, value);
-	}
+	if (MATCH("app", "key_file_path"))
+		pconfig->key_file_path=strdup(value);
+	else if (MATCH("app", "iv_file_path"))
+		pconfig->iv_file_path=strdup(value);
 	else
 		return 0;  /* unknown section/app, error */
-
-	pconfig->cipher_file_path[lenght] = '\0';
 
 	return 1;
 }

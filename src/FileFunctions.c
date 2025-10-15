@@ -26,9 +26,7 @@ void* read_file(const char* filename, size_t* size)
 		fclose(file);
 		return NULL;
 	}
-
-	//printf("filename:%s\nfile size:%ld\n\n",filename,file_size);
-
+	
 	void* data = malloc(file_size+1);
 	if(!data)
 		return NULL;
@@ -135,9 +133,9 @@ int write_file(const char* filename, const char* modes, const char* data, size_t
 	return EXIT_SUCCESS;
 }
 //Шифрование данных
-void* encrypt_buffer(void* input, size_t size, size_t* out_size)
+void* encrypt_buffer(void* input, size_t size, size_t* out_size, struct ChipherStruct* chipher)
 {
-	*out_size = 0;
+/*	*out_size = 0;
 	void* encrypted_data = malloc(size);
 	if(!encrypted_data)
 		return NULL;
@@ -145,7 +143,29 @@ void* encrypt_buffer(void* input, size_t size, size_t* out_size)
 	memcpy(encrypted_data,input,size);
 	*out_size = size;
 
-	return encrypted_data;
+	return encrypted_data;*/
+	
+	if(!chipher)
+		return NULL;
+
+	struct EVP_CIPHER_CTX* ctx;
+	int len;
+	int chiphertext_len;
+
+	if(!(ctx=EVP_CIPHER_CTX_new()))
+	{
+		ERR_print_errors_fp(stderr);
+		return NULL;
+	}
+	
+	if(1!=EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, chipher->key, chipher->iv))
+	{
+		ERR_print_errors_fp(stderr);
+		return NULL;
+	}
+
+	unsigned char* chipher_text = (unsigned char*)malloc(size);
+	if(1!=EVP_EncryptUpdate(ctx,(unsigned char*) chipher_text, &len, (unsigned char*)input, size)
 }
 //Преобразование данных в буфер символов
 void* deparse_password_structs(const struct PasswordStruct* passwords, size_t count, size_t* out_size)
