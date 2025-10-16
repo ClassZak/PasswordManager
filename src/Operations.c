@@ -1,4 +1,5 @@
 ﻿#include "Operations.h"
+#include "ChipherStructOperations.h"
 
 int AddNewPasswordStructEmplace(struct PasswordStruct*** array, size_t* arraySize, struct PasswordStruct* newElement)
 {
@@ -61,6 +62,11 @@ void ShowCommandList()
 
 void Dialog(const char* filename,struct ConfigurationStruct* config)
 {
+	// Chipher initialization
+	struct ChipherStruct chipher = {0, NULL, 0, NULL};
+	load_chipher_struct(&chipher, config);
+	printf("key:\"%s\"\niv:\"%s\"", chipher.key, chipher.iv);
+
 	char input[256];
 	long long_command;
 	int command;
@@ -164,7 +170,7 @@ void Dialog(const char* filename,struct ConfigurationStruct* config)
 				
 				int res;
 				if(password)
-					res=AddNewPassword(filename, password);
+					res=AddNewPassword(filename, password, &chipher);
 				else
 					res=2;
 
@@ -186,7 +192,7 @@ void Dialog(const char* filename,struct ConfigurationStruct* config)
 
 				int res;
 				if (password)
-					res = AddNewPassword(filename, password);
+					res = AddNewPassword(filename, password, &chipher);
 				else
 					res = 4;
 
@@ -225,7 +231,7 @@ void Dialog(const char* filename,struct ConfigurationStruct* config)
 				printf("Название пароля\t->");
 				scan_long_string(name);
 
-				int res=DeletePasswordByName(filename,name);
+				int res=DeletePasswordByName(filename,name,&chipher);
 				switch (res)
 				{
 				case 0:
@@ -256,7 +262,7 @@ void Dialog(const char* filename,struct ConfigurationStruct* config)
 				printf("Введите логин для удаления записей:\n");
 				scan_long_string(login);
 
-				int res = DeletePasswordByLogin(filename, login);
+				int res = DeletePasswordByLogin(filename, login, &chipher);
 				switch (res)
 				{
 				case 0:
@@ -466,7 +472,7 @@ void Dialog(const char* filename,struct ConfigurationStruct* config)
 	}
 }
 
-int AddNewPassword(const char* filename, struct PasswordStruct* password_struct)
+int AddNewPassword(const char* filename, struct PasswordStruct* password_struct, struct ChipherStruct* chipher)
 {
 	size_t file_data_size = 0;
 	void* file_data = read_file(filename, &file_data_size);
@@ -477,13 +483,13 @@ int AddNewPassword(const char* filename, struct PasswordStruct* password_struct)
 
 	if(AddNewPasswordStruct(&passwords, &passwords_count, password_struct))
 		return EXIT_FAILURE;
-	if(WriteAllPasswordStructs(filename,passwords,passwords_count))
+	if(WriteAllPasswordStructs(filename,passwords,passwords_count, chipher))
 		return EXIT_FAILURE;
 
 	return EXIT_SUCCESS;
 }
 
-int DeletePassword(const char* filename, struct PasswordStruct* password_struct)
+int DeletePassword(const char* filename, struct PasswordStruct* password_struct,struct ChipherStruct* chipher)
 {
 	size_t passwords_quantity;
 	struct PasswordStruct* passwords;
@@ -527,7 +533,7 @@ int DeletePassword(const char* filename, struct PasswordStruct* password_struct)
 			AddNewPasswordStruct(&passwords_for_rewrite,&passwords_for_rewrite_quantity, passwords + i);
 	}
 
-	int res = WriteAllPasswordStructs(filename, passwords_for_rewrite, passwords_for_rewrite_quantity);
+	int res = WriteAllPasswordStructs(filename, passwords_for_rewrite, passwords_for_rewrite_quantity, chipher);
 	if(passwords_for_remove)
 		free(passwords_for_remove);
 	if(passwords)
@@ -542,7 +548,7 @@ int DeletePassword(const char* filename, struct PasswordStruct* password_struct)
 		return EXIT_SUCCESS;
 }
 
-int DeletePasswordByName(const char* filename, const char* name)
+int DeletePasswordByName(const char* filename, const char* name, struct ChipherStruct* chipher)
 {
 	size_t passwords_quantity;
 	struct PasswordStruct* passwords;
@@ -580,7 +586,7 @@ int DeletePasswordByName(const char* filename, const char* name)
 			AddNewPasswordStruct(&passwords_for_rewrite, &passwords_for_rewrite_quantity, passwords + i);
 	}
 
-	int res = WriteAllPasswordStructs(filename, passwords_for_rewrite, passwords_for_rewrite_quantity);
+	int res = WriteAllPasswordStructs(filename, passwords_for_rewrite, passwords_for_rewrite_quantity, chipher);
 	if (passwords_for_rewrite)
 		free(passwords_for_rewrite);
 	if (passwords_for_remove)
@@ -594,7 +600,7 @@ int DeletePasswordByName(const char* filename, const char* name)
 		return EXIT_SUCCESS;
 }
 
-int DeletePasswordByLogin(const char* filename, const char* login)
+int DeletePasswordByLogin(const char* filename, const char* login, struct ChipherStruct* chipher)
 {
 	size_t passwords_quantity;
 	struct PasswordStruct* passwords;
@@ -632,7 +638,7 @@ int DeletePasswordByLogin(const char* filename, const char* login)
 			AddNewPasswordStruct(&passwords_for_rewrite, &passwords_for_rewrite_quantity, passwords + i);
 	}
 
-	int res = WriteAllPasswordStructs(filename, passwords_for_rewrite, passwords_for_rewrite_quantity);
+	int res = WriteAllPasswordStructs(filename, passwords_for_rewrite, passwords_for_rewrite_quantity, chipher);
 	if (passwords_for_rewrite)
 		free(passwords_for_rewrite);
 	if (passwords_for_remove)

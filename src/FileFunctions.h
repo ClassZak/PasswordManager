@@ -8,8 +8,6 @@
 #include <stdint.h>
 #include <string.h>
 
-#include <openssl/evp.h>
-#include <openssl/err.h>
 
 #define FILE_ERROR_READING   2
 #define FILE_ERROR_NOT_FOUND 3

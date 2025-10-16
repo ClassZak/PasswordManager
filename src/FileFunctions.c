@@ -1,4 +1,6 @@
 #include "FileFunctions.h"
+#include <openssl/evp.h>
+#include <openssl/err.h>
 
 //Получение размера файла -1 - ошибка
 long get_file_size(FILE** file)
@@ -145,27 +147,52 @@ void* encrypt_buffer(void* input, size_t size, size_t* out_size, struct ChipherS
 
 	return encrypted_data;*/
 	
-	if(!chipher)
-		return NULL;
-
-	struct EVP_CIPHER_CTX* ctx;
+	EVP_CIPHER_CTX *ctx;
 	int len;
-	int chiphertext_len;
-
-	if(!(ctx=EVP_CIPHER_CTX_new()))
+	unsigned char* ciphertext;
+	int ciphertext_len;
+	
+	if(!(ctx = EVP_CIPHER_CTX_new()))
 	{
 		ERR_print_errors_fp(stderr);
 		return NULL;
 	}
 	
-	if(1!=EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, chipher->key, chipher->iv))
+	if(1 != EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, chipher->key, chipher->iv))
 	{
 		ERR_print_errors_fp(stderr);
+		EVP_CIPHER_CTX_free(ctx);
 		return NULL;
 	}
-
-	unsigned char* chipher_text = (unsigned char*)malloc(size);
-	if(1!=EVP_EncryptUpdate(ctx,(unsigned char*) chipher_text, &len, (unsigned char*)input, size)
+	
+	ciphertext = malloc(size + EVP_CIPHER_CTX_block_size(ctx));
+	if (!ciphertext)
+	{
+		EVP_CIPHER_CTX_free(ctx);
+		return NULL;
+	}
+	
+	if(1 != EVP_EncryptUpdate(ctx, ciphertext, &len, input, size))
+	{
+		ERR_print_errors_fp(stderr);
+		free(ciphertext);
+		EVP_CIPHER_CTX_free(ctx);
+		return NULL;
+	}
+	ciphertext_len = len;
+	
+	if(1 != EVP_EncryptFinal_ex(ctx, ciphertext + len, &len))
+	{
+		ERR_print_errors_fp(stderr);
+		free(ciphertext);
+		EVP_CIPHER_CTX_free(ctx);
+		return NULL;
+	}
+	ciphertext_len += len;
+	
+	EVP_CIPHER_CTX_free(ctx);
+	*out_size = ciphertext_len;
+	return ciphertext;
 }
 //Преобразование данных в буфер символов
 void* deparse_password_structs(const struct PasswordStruct* passwords, size_t count, size_t* out_size)

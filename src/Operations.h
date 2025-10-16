@@ -174,7 +174,7 @@ static inline void CLS()
 /// 0 - успех
 /// 1 - ошибка записи в файл
 /// </returns>
-int AddNewPassword(const char* filename, struct PasswordStruct* password_struct);
+int AddNewPassword(const char* filename, struct PasswordStruct* password_struct, struct ChipherStruct* chipher);
 /// <summary>
 /// 
 /// </summary>
@@ -186,7 +186,7 @@ int AddNewPassword(const char* filename, struct PasswordStruct* password_struct)
 /// 2 - ошибка чтения файла
 /// 3 - не найдены пароли для удаления
 /// </returns>
-int DeletePassword(const char* filename, struct PasswordStruct* password_struct);
+int DeletePassword(const char* filename, struct PasswordStruct* password_struct,struct ChipherStruct* chipher);
 /// <summary>
 /// 
 /// </summary>
@@ -198,7 +198,7 @@ int DeletePassword(const char* filename, struct PasswordStruct* password_struct)
 /// 2 - ошибка чтения файла
 /// 3 - не найдены пароли для удаления
 /// </returns>
-int DeletePasswordByName(const char* filename, const char* name);
+int DeletePasswordByName(const char* filename, const char* name, struct ChipherStruct* chipher);
 /// <summary>
 /// 
 /// </summary>
@@ -210,7 +210,7 @@ int DeletePasswordByName(const char* filename, const char* name);
 /// 2 - ошибка чтения файла
 /// 3 - не найдены пароли для удаления
 /// </returns>
-int DeletePasswordByLogin(const char* filename, const char* login);
+int DeletePasswordByLogin(const char* filename, const char* login, struct ChipherStruct* chipher);
 
 #define PASSWORD_STRUCT_FIND_BY_NAME		0b10000
 #define PASSWORD_STRUCT_FIND_BY_LOGIN		0b01000
