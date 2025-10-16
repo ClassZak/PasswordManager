@@ -53,6 +53,9 @@ endif()
 
 message(STATUS "Тип сборки: ${CMAKE_BUILD_TYPE}")
 
+# Libraries
+find_package(OpenSSL REQUIRED)
+target_link_libraries(PasswordManager OpenSSL::SSL OpenSSL::Crypto)
 
 # Горячая перезагрузка для MSVC
 if(MSVC)
