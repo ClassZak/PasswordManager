@@ -1,5 +1,8 @@
 #pragma once
 #include "ChipherStruct.h"
+#include <stdlib.h>
+#include "Functions.h"
+#include "FileFunctions.h"
 
 static inline int load_chipher_struct(struct ChipherStruct* chipher, struct ConfigurationStruct* config)
 {

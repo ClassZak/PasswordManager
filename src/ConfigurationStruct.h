@@ -14,9 +14,9 @@ struct ConfigurationStruct
 	char* iv_file_path;
 };
 
-static inline int ini_config_parse_handler(void* user, const char* section, const char* name, const char* value)
+static inline int ini_config_parse_handler(void* config, const char* section, const char* name, const char* value)
 {
-	struct ConfigurationStruct* pconfig = (struct ConfigurationStruct*)user;
+	struct ConfigurationStruct* pconfig = (struct ConfigurationStruct*)config;
 
 	size_t lenght = strlen(value);
 
