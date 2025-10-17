@@ -230,7 +230,7 @@ int main(int argc, char** argv)
 		print_with_color("Failed to load app config!\n", 91);
 		return EXIT_FAILURE;
 	}
-	printf("cipher_file_path:\"%s\"\n%siv:\"", config.key_file_path, config.iv_file_path);
+	printf("cipher_file_path:\"%s\"\niv_file_path:\"%s\"\n", config.key_file_path, config.iv_file_path);
 	struct ChipherStruct chipher={0, NULL, 0, NULL};
 	if(load_chipher_struct(&chipher, &config))
 		return EXIT_FAILURE;

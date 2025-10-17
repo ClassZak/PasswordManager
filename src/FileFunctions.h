@@ -19,7 +19,7 @@ long get_file_size(FILE** file);
 //Чтение данных из файла
 void* read_file(const char* filename, size_t* size);
 //Расшифровка данных из файла
-void* decrypt_buffer(void* input, size_t size, size_t* out_size);
+void* decrypt_buffer(void* input, size_t size, size_t* out_size, struct ChipherStruct* chipher);
 //Парсинг полученных данных
 struct PasswordStruct* parse_password_structs(const void* buf, size_t data_size, size_t* out_size);
 
@@ -31,7 +31,7 @@ void* encrypt_buffer(void* input, size_t size, size_t* out_size, struct ChipherS
 void* deparse_password_structs(const struct PasswordStruct* passwords, size_t count, size_t* out_size);
 
 //Получение всех структур паролей
-static inline int GetAllPasswordStructs(struct PasswordStruct** passwords, size_t* size, const char* filename)
+static inline int GetAllPasswordStructs(struct PasswordStruct** passwords, size_t* size, const char* filename, struct ChipherStruct* chipher)
 {
 	*size = 0;
 	size_t data_size;
@@ -40,7 +40,7 @@ static inline int GetAllPasswordStructs(struct PasswordStruct** passwords, size_
 		return EXIT_FAILURE;
 
 	size_t decrypted_data_size;
-	void* decrypted_data = decrypt_buffer(data, data_size, &decrypted_data_size);
+	void* decrypted_data = decrypt_buffer(data, data_size, &decrypted_data_size, chipher);
 	if (!decrypted_data)
 		return EXIT_FAILURE;
 

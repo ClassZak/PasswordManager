@@ -247,5 +247,6 @@ int FindPasswords
 	struct PasswordStruct* params,
 	struct PasswordStruct** founded_passwords,
 	size_t* founded_passwords_quantity,
-	int flags
+	int flags,
+	struct ChipherStruct* chipher
 );

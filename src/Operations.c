@@ -64,8 +64,6 @@ void Dialog(const char* filename,struct ConfigurationStruct* config)
 {
 	// Chipher initialization
 	struct ChipherStruct chipher = {0, NULL, 0, NULL};
-	load_chipher_struct(&chipher, config);
-	printf("key:\"%s\"\niv:\"%s\"", chipher.key, chipher.iv);
 
 	char input[256];
 	long long_command;
@@ -76,6 +74,7 @@ void Dialog(const char* filename,struct ConfigurationStruct* config)
 
 	while (1)
 	{
+		load_chipher_struct(&chipher, config);
 		printf(">");
 		fflush(stdout);
 		
@@ -401,7 +400,8 @@ void Dialog(const char* filename,struct ConfigurationStruct* config)
 					&password,
 					&founded_passwords,
 					&founded_passwords_quantity,
-					flags
+					flags,
+					&chipher
 				);
 
 				printf("\n");
@@ -436,7 +436,7 @@ void Dialog(const char* filename,struct ConfigurationStruct* config)
 			}
 			case COMMAND_SHOW_ALL_PASSWORDS:
 			{
-				struct PasswordStruct* passwords;
+				struct PasswordStruct* passwords=NULL;
 				size_t passwords_quantity;
 
 				{
@@ -455,7 +455,7 @@ void Dialog(const char* filename,struct ConfigurationStruct* config)
 					fclose(file);
 				}
 				
-				int result = GetAllPasswordStructs(&passwords, &passwords_quantity, filename);
+				int result = GetAllPasswordStructs(&passwords, &passwords_quantity, filename, &chipher);
 
 				if (passwords == NULL)
 				{
@@ -477,7 +477,7 @@ int AddNewPassword(const char* filename, struct PasswordStruct* password_struct,
 	size_t file_data_size = 0;
 	void* file_data = read_file(filename, &file_data_size);
 	size_t decrypt_file_data_size = 0;
-	void* decrypt_file_data = decrypt_buffer(file_data, file_data_size, &decrypt_file_data_size);
+	void* decrypt_file_data = decrypt_buffer(file_data, file_data_size, &decrypt_file_data_size, chipher);
 	size_t passwords_count = 0;
 	struct PasswordStruct* passwords = parse_password_structs(decrypt_file_data, decrypt_file_data_size, &passwords_count);
 
@@ -493,7 +493,7 @@ int DeletePassword(const char* filename, struct PasswordStruct* password_struct,
 {
 	size_t passwords_quantity;
 	struct PasswordStruct* passwords;
-	GetAllPasswordStructs(&passwords, &passwords_quantity, filename);
+	GetAllPasswordStructs(&passwords, &passwords_quantity, filename, chipher);
 	
 	size_t passwords_for_remove_quantity=0;
 	struct PasswordStruct** passwords_for_remove=NULL;
@@ -552,7 +552,7 @@ int DeletePasswordByName(const char* filename, const char* name, struct ChipherS
 {
 	size_t passwords_quantity;
 	struct PasswordStruct* passwords;
-	GetAllPasswordStructs(&passwords, &passwords_quantity, filename);
+	GetAllPasswordStructs(&passwords, &passwords_quantity, filename, chipher);
 
 	size_t passwords_for_remove_quantity = 0;
 	struct PasswordStruct** passwords_for_remove = NULL;
@@ -604,7 +604,7 @@ int DeletePasswordByLogin(const char* filename, const char* login, struct Chiphe
 {
 	size_t passwords_quantity;
 	struct PasswordStruct* passwords;
-	GetAllPasswordStructs(&passwords, &passwords_quantity, filename);
+	GetAllPasswordStructs(&passwords, &passwords_quantity, filename, chipher);
 
 	size_t passwords_for_remove_quantity = 0;
 	struct PasswordStruct** passwords_for_remove = NULL;
@@ -658,7 +658,8 @@ int FindPasswords
 	struct PasswordStruct* params,
 	struct PasswordStruct** founded_passwords,
 	size_t* founded_passwords_quantity,
-	int flags
+	int flags,
+	struct ChipherStruct* chipher
 )
 {
 	if(params==NULL)
@@ -675,7 +676,7 @@ int FindPasswords
 	}
 	size_t passwords_quantity;
 	struct PasswordStruct* passwords;
-	GetAllPasswordStructs(&passwords, &passwords_quantity, filename);
+	GetAllPasswordStructs(&passwords, &passwords_quantity, filename, chipher);
 
 	if (*founded_passwords != NULL)
 	{

@@ -51,17 +51,63 @@ void* read_file(const char* filename, size_t* size)
 //TODO: переделать
 
 //Расшифровка данных из файла
-void* decrypt_buffer(void* input, size_t size, size_t* out_size)
+void* decrypt_buffer(void* input, size_t size, size_t* out_size, struct ChipherStruct* chipher)
 {
-	*out_size = 0;
-	void* decrypted_data = malloc(size);
-	if(!decrypted_data)
+	if(!size
+	//||size < EVP_CIPHER_CTX_get_block_size(EVP_aes_256_cbc())
+	)
+	{
+		*out_size = 0;
 		return NULL;
+	}
 
-	memcpy(decrypted_data,input,size);
-	*out_size=size;
+	EVP_CIPHER_CTX* ctx;
+	int len;
+	unsigned char* plaintext;
+	int plaintext_len;
 
-	return decrypted_data;
+	if(!(ctx = EVP_CIPHER_CTX_new()))
+	{
+		ERR_print_errors_fp(stderr);
+		return NULL;
+	}
+
+	if(1!=EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, chipher->key, chipher->iv))
+	{
+		ERR_print_errors_fp(stderr);
+		EVP_CIPHER_CTX_free(ctx);
+		return NULL;
+	}
+
+	plaintext = malloc(size + EVP_CIPHER_CTX_block_size(ctx));
+	if(!plaintext)
+	{
+		EVP_CIPHER_CTX_free(ctx);
+		return NULL;
+	}
+
+	if(1!=EVP_DecryptUpdate(ctx, plaintext, &len, input, size))
+	{
+		free(plaintext);
+		ERR_print_errors_fp(stderr);
+		EVP_CIPHER_CTX_free(ctx);
+		return NULL;
+	}
+	plaintext_len=len;
+
+	if(1!=EVP_DecryptFinal_ex(ctx, plaintext + len, &len))
+	{
+		free(plaintext);
+		ERR_print_errors_fp(stderr);
+		EVP_CIPHER_CTX_free(ctx);
+		return NULL;
+	}
+	plaintext_len+=len;
+
+	EVP_CIPHER_CTX_free(ctx);
+
+	*out_size = plaintext_len;
+	return plaintext;
 }
 
 //Парсинг полученных данных
@@ -137,16 +183,14 @@ int write_file(const char* filename, const char* modes, const char* data, size_t
 //Шифрование данных
 void* encrypt_buffer(void* input, size_t size, size_t* out_size, struct ChipherStruct* chipher)
 {
-/*	*out_size = 0;
-	void* encrypted_data = malloc(size);
-	if(!encrypted_data)
+	if(!size
+	//||size < EVP_CIPHER_CTX_get_block_size(EVP_aes_256_cbc())
+	)
+	{
+		*out_size = 0;
 		return NULL;
+	}
 
-	memcpy(encrypted_data,input,size);
-	*out_size = size;
-
-	return encrypted_data;*/
-	
 	EVP_CIPHER_CTX *ctx;
 	int len;
 	unsigned char* ciphertext;
