@@ -53,3 +53,9 @@ touch key.bin
 touch iv.bin
 ```
 
+3. Launch
+
+```bash
+./build/PasswordManager
+```
+
