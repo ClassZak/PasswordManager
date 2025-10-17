@@ -19,6 +19,7 @@ Simple password manager for storing encrypted password by OpenSSL library with k
 ## 📰 Config file
 
 WARNING!!!
+
 The actual expample of program configuration is stored in config\_example.ini
 
 ```ini
@@ -27,14 +28,16 @@ key_file_path=key.bin
 iv_file_path=iv.bin
 ```
 
-key\_file\_path is the path of chipher key
-iv\_file\_path is the path of chipher iv
+- key\_file\_path is the path of chipher key
+- iv\_file\_path is the path of chipher iv
 
 Both are required to start the proram
 
 ## 🏗 🚀 Building and launching
 
-1. Clone and build
+1. Copy the necessary files to the deps/ directory. All necessary information is located in deps/deps.txt
+
+2. Clone and build
 
 ```bash
 git clone https://github.com/ClassZak/PasswordManager
@@ -45,7 +48,7 @@ cmake --build build/
 
 Actual presets you can see in CMakePresets.txt
 
-2. Create config file and chipher files
+3. Create config file and chipher files
 
 ```bash
 cp config_example.ini config.ini
@@ -53,7 +56,7 @@ touch key.bin
 touch iv.bin
 ```
 
-3. Launch
+4. Launch
 
 ```bash
 ./build/PasswordManager
