@@ -1,6 +1,6 @@
 # PasswordManager
 
-Simple password manager for passwords storing.
+Simple password manager for storing encrypted password by OpenSSL library with key and iv.
 
 ## 🛠 Dependencies
 
