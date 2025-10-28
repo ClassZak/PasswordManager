@@ -4,7 +4,7 @@ Simple password manager for storing encrypted password by OpenSSL library using 
 
 This program uses AES-256-CBC cipher.
 
-WARNING!!!
+** ⚠️ WARNING!!!**
 
 Check the sizes of the key file and iv file to ensure you are using the correct cipher.
 
@@ -24,7 +24,7 @@ Check the sizes of the key file and iv file to ensure you are using the correct 
 
 ## 📰 Config file
 
-WARNING!!!
+** ⚠️ WARNING!!!**
 
 The actual expample of program configuration is stored in config\_example.ini
 
