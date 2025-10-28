@@ -23,6 +23,15 @@ static inline void scan_long_string(char* buffer)
 {
 	scan_string(buffer, 1 << sizeof(size_t));
 }
+static inline void pause()
+{
+#ifdef _WIN32
+	system("pause");
+#elif defined __unix__
+	printf("Press the \"Enter\" key to continue\n");
+	getchar();
+#endif
+}
 
 
 

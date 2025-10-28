@@ -8,6 +8,11 @@ project(PasswordManager VERSION 1.0
 )
 
 set(CMAKE_C_STANDARD 11)  # Исправлена опечатка в STANDARD
+# Статическая линковка на Windows
+if(WIN32)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+    add_compile_definitions(OPENSSL_STATIC)
+endif()
 set(SOURCES 
 	
 	${CMAKE_SOURCE_DIR}/src/PasswordManager.c
@@ -80,4 +85,9 @@ if(MSVC)
 else()
 	# Для GCC/Clang используем -O0
 	target_compile_options(PasswordManager PRIVATE -O0)
+endif()
+
+#define _DEBUG
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+	add_compile_definitions(_DEBUG)
 endif()

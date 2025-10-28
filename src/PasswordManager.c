@@ -5,6 +5,7 @@
 
 #ifdef _WIN32
 #include <windows.h>
+#include <openssl/applink.c>
 #else 
 #ifdef __unix__
 #include <errno.h>
@@ -228,22 +229,23 @@ int main(int argc, char** argv)
 	if(ini_parse("config.ini", ini_config_parse_handler, &config) < 0)
 	{
 		print_with_color("Failed to load app config!\n", 91);
+		pause();
 		return EXIT_FAILURE;
 	}
+#ifdef _DEBUG
 	printf("cipher_file_path:\"%s\"\niv_file_path:\"%s\"\n", config.key_file_path, config.iv_file_path);
+#endif
 	struct ChipherStruct chipher={0, NULL, 0, NULL};
 	if(load_chipher_struct(&chipher, &config))
+	{
+		pause();
 		return EXIT_FAILURE;
+	}
 	
 	CheckPasswordStorage();
 	Dialog(PASSWORD_FILE, &config);
 	
-#ifdef _WIN32
-	system("pause");
-#elif defined __unix__
-	printf("Press the \"Enter\" key to continue\n");
-	getchar();
-#endif
+	pause();
 	
 	return EXIT_SUCCESS;
 }

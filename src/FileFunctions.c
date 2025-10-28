@@ -21,6 +21,9 @@ long get_file_size(FILE** file)
 void* read_file(const char* filename, size_t* size)
 {
 	FILE* file = fopen(filename,"rb");
+	if(!file)
+		return NULL;
+
 	*size = 0;
 	long file_size = get_file_size(&file);
 	if(file_size == -1)
