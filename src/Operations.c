@@ -440,7 +440,7 @@ void Dialog(const char* filename,struct ConfigurationStruct* config)
 				size_t passwords_quantity;
 
 				{
-					FILE* file = fopen(filename, "r");
+					FILE* file = fopen(filename, "rb");
 					if(!file)
 					{
 						print_with_color("Ошибка чтения паролей\n", 91);

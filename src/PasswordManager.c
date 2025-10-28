@@ -6,6 +6,8 @@
 #ifdef _WIN32
 #include <windows.h>
 #include <openssl/applink.c>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
 #else 
 #ifdef __unix__
 #include <errno.h>
@@ -220,6 +222,8 @@ int main(int argc, char** argv)
 {
 	setlocale(LC_ALL, "");
 #ifdef _WIN32
+	SSL_library_init();
+	SSL_load_error_strings();
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
 	EnableVTMode();

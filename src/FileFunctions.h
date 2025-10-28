@@ -63,7 +63,7 @@ static inline int WriteAllPasswordStructs(const char* filename, struct PasswordS
 	size_t encrypt_data_size = 0;
 	void* encrypt_data = encrypt_buffer(deparsed_data, deparsed_data_size, &encrypt_data_size, chipher);
 
-	if (write_file(filename, "w", (const char*)encrypt_data,encrypt_data_size))
+	if (write_file(filename, "wb", (const char*)encrypt_data,encrypt_data_size))
 		return EXIT_FAILURE;
 
 	return EXIT_SUCCESS;

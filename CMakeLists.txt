@@ -7,8 +7,7 @@ project(PasswordManager VERSION 1.0
 		LANGUAGES C
 )
 
-set(CMAKE_C_STANDARD 11)  # Исправлена опечатка в STANDARD
-# Статическая линковка на Windows
+set(CMAKE_C_STANDARD 11)
 if(WIN32)
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
     add_compile_definitions(OPENSSL_STATIC)
