@@ -2,6 +2,12 @@
 
 Simple password manager for storing encrypted password by OpenSSL library using cipher with key and iv.
 
+This program uses AES-256-CBC cipher.
+
+WARNING!!!
+
+Check the sizes of the key file and iv file to ensure you are using the correct cipher.
+
 ## 🛠 Dependencies
 
 1. inih https://github.com/benhoyt/inih
