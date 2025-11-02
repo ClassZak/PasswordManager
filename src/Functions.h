@@ -23,7 +23,7 @@ static inline void scan_long_string(char* buffer)
 {
 	scan_string(buffer, 1 << sizeof(size_t));
 }
-static inline void pause()
+static inline void pause_prompt()
 {
 #ifdef _WIN32
 	system("pause");

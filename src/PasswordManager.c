@@ -233,7 +233,7 @@ int main(int argc, char** argv)
 	if(ini_parse("config.ini", ini_config_parse_handler, &config) < 0)
 	{
 		print_with_color("Failed to load app config!\n", 91);
-		pause();
+		pause_prompt();
 		return EXIT_FAILURE;
 	}
 #ifdef _DEBUG
@@ -242,14 +242,14 @@ int main(int argc, char** argv)
 	struct ChipherStruct chipher={0, NULL, 0, NULL};
 	if(load_chipher_struct(&chipher, &config))
 	{
-		pause();
+		pause_prompt();
 		return EXIT_FAILURE;
 	}
 	
 	CheckPasswordStorage();
 	Dialog(PASSWORD_FILE, &config);
 	
-	pause();
+	pause_prompt();
 	
 	return EXIT_SUCCESS;
 }

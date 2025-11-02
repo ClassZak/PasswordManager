@@ -9,8 +9,8 @@ project(PasswordManager VERSION 1.0
 
 set(CMAKE_C_STANDARD 11)
 if(WIN32)
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-    add_compile_definitions(OPENSSL_STATIC)
+	set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+	add_compile_definitions(OPENSSL_STATIC)
 endif()
 set(SOURCES 
 	
