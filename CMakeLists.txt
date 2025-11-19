@@ -13,6 +13,7 @@ if(WIN32)
 	add_compile_definitions(OPENSSL_STATIC)
 endif()
 set(SOURCES 
+	${CMAKE_SOURCE_DIR}/src/ArgParsing.h
 	
 	${CMAKE_SOURCE_DIR}/src/PasswordManager.c
 	

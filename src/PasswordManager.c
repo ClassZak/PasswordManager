@@ -218,6 +218,9 @@ void EnableVTMode()
 #endif // _WIN32
 
 
+#include "ArgParsing.h"
+
+
 int main(int argc, char** argv)
 {
 	setlocale(LC_ALL, "");
@@ -228,6 +231,8 @@ int main(int argc, char** argv)
 	SetConsoleOutputCP(1251);
 	EnableVTMode();
 #endif // _WIN32
+	
+	enum ArgParsingResult pasrsing_result = ParseArgs(argc, argv);
 	
 	struct ConfigurationStruct config;
 	if(ini_parse("config.ini", ini_config_parse_handler, &config) < 0)
