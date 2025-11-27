@@ -218,7 +218,8 @@ void EnableVTMode()
 #endif // _WIN32
 
 
-#include "ArgParsing.h"
+#include "ArgParsing/ArgParsing.h"
+
 
 
 int main(int argc, char** argv)
@@ -233,7 +234,13 @@ int main(int argc, char** argv)
 #endif // _WIN32
 	
 	enum ArgParsingResult pasrsing_result = ParseArgs(argc, argv);
-	
+	if (pasrsing_result != Default_ParsingResult)
+	{
+		if(pasrsing_result == Error_ParsingResult)
+			return -1;
+	}
+
+		
 	struct ConfigurationStruct config;
 	if(ini_parse("config.ini", ini_config_parse_handler, &config) < 0)
 	{
