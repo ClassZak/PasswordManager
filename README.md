@@ -13,6 +13,11 @@ Check the sizes of the key file and iv file to ensure you are using the correct 
 1. inih https://github.com/benhoyt/inih
 2. OpenSSL https://github.com/openssl/openssl
 
+## ⚙️ Options
+
+Run `PasswordManager -h` or `PasswordManager --help` for show help
+Run `PasswordManager -v` or `PasswordManager --version` for show version
+
 ## 🖼️ Program appearance
 
 <p align="center">
