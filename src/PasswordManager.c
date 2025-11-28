@@ -219,7 +219,7 @@ void EnableVTMode()
 
 
 #include "ArgParsing/ArgParsing.h"
-
+#include "ArgParsing/ProcessParseResult.h"
 
 
 int main(int argc, char** argv)
@@ -234,32 +234,8 @@ int main(int argc, char** argv)
 #endif // _WIN32
 	
 	enum ArgParsingResult pasrsing_result = ParseArgs(argc, argv);
-	if (pasrsing_result != Default_ParsingResult)
-	{
-		switch (pasrsing_result)
-		{
-			case Version_ParsingResult:
-			{
-				printf("1.0.0\n");
-				break;
-			}
-			case Help_ParsingResult:
-			{
-				ShowHelp();
-				break;
-			}
-			default:
-			{
-				print_with_color("Error of argument parsing",31);
-				ShowHelp();
-				return EXIT_FAILURE;
-			}
-		}
-		
-		return EXIT_SUCCESS;
-	}
-
-		
+	ProcessParseResult(pasrsing_result);
+	
 	struct ConfigurationStruct config;
 	if(ini_parse("config.ini", ini_config_parse_handler, &config) < 0)
 	{
