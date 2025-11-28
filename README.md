@@ -15,8 +15,7 @@ Check the sizes of the key file and iv file to ensure you are using the correct 
 
 ## ⚙️ Options
 
-Run `PasswordManager -h` or `PasswordManager --help` for show help
-
+Run `PasswordManager -h` or `PasswordManager --help` for show help<br>
 Run `PasswordManager -v` or `PasswordManager --version` for show version
 
 ## 🖼️ Program appearance
