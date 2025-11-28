@@ -19,7 +19,7 @@ static inline void ProcessParseResult(enum ArgParsingResult pasrsing_result)
 			}
 			default:
 			{
-				print_with_color("Error of argument parsing",31);
+				print_with_color("Error of argument parsing\n\n",31);
 				ShowHelp();
 				exit(EXIT_FAILURE);
 			}

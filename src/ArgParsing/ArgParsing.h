@@ -30,9 +30,9 @@ static inline int ParseArgs(int argc, char** argv)
 	if (argc!=2)
 		return Error_ParsingResult;
 	
-	if (!strcmp(argv[1], "-v"))
+	if (!strcmp(argv[1], "-v") || !(strcmp(argv[1], "--version")))
 		return Version_ParsingResult;
-	else if(!strcmp(argv[1], "-h"))
+	else if(!strcmp(argv[1], "-h") || !(strcmp(argv[1], "--help")))
 		return Help_ParsingResult;
 	else
 		return Error_ParsingResult;
