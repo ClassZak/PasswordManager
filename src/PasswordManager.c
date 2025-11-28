@@ -236,8 +236,27 @@ int main(int argc, char** argv)
 	enum ArgParsingResult pasrsing_result = ParseArgs(argc, argv);
 	if (pasrsing_result != Default_ParsingResult)
 	{
-		if(pasrsing_result == Error_ParsingResult)
-			return -1;
+		switch (pasrsing_result)
+		{
+			case Version_ParsingResult:
+			{
+				printf("1.0.0\n");
+				break;
+			}
+			case Help_ParsingResult:
+			{
+				ShowHelp();
+				break;
+			}
+			default:
+			{
+				print_with_color("Error of argument parsing",31);
+				ShowHelp();
+				return EXIT_FAILURE;
+			}
+		}
+		
+		return EXIT_SUCCESS;
 	}
 
 		

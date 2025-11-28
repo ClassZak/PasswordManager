@@ -1,11 +1,20 @@
 #pragma once
+#include <string.h>
 #include "ShowHelp.h"
+#include "../Functions.h"
+
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <stdlib.h>
+#endif // _WIN32
 
 enum ArgParsingResult
 {
 	Default_ParsingResult,
 	Error_ParsingResult,
-	Help_ParsingResult
+	Help_ParsingResult,
+	Version_ParsingResult,
 };
 
 
@@ -15,9 +24,18 @@ static inline int ParseArgs(int argc, char** argv)
 	for(int i = 0; i != argc; ++i)
 		printf("%s\n",argv[i]);
 #endif
-	ShowHelp();
+	if (argc==1)
+		return Default_ParsingResult;
 
-	return Default_ParsingResult;
+	if (argc!=2)
+		return Error_ParsingResult;
+	
+	if (!strcmp(argv[1], "-v"))
+		return Version_ParsingResult;
+	else if(!strcmp(argv[1], "-h"))
+		return Help_ParsingResult;
+	else
+		return Error_ParsingResult;
 }
 
 
