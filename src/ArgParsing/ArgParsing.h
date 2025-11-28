@@ -1,5 +1,5 @@
 #pragma once
-#include <stdio.h>
+#include "ShowHelp.h"
 
 enum ArgParsingResult
 {
@@ -15,6 +15,7 @@ static inline int ParseArgs(int argc, char** argv)
 	for(int i = 0; i != argc; ++i)
 		printf("%s\n",argv[i]);
 #endif
+	ShowHelp();
 
 	return Default_ParsingResult;
 }

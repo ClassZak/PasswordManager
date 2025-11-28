@@ -14,6 +14,7 @@ if(WIN32)
 endif()
 set(SOURCES 
 	${CMAKE_SOURCE_DIR}/src/ArgParsing/ArgParsing.h
+	${CMAKE_SOURCE_DIR}/src/ArgParsing/ShowHelp.h
 	
 	${CMAKE_SOURCE_DIR}/src/PasswordManager.c
 	
